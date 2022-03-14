@@ -12,6 +12,7 @@ const chainIds = {
   main: 1
 }
 
+/* RLP_encode 永遠不會以 x19 開頭，參考提案 https://github.com/ethereum/go-ethereum/pull/2940 */
 const personalSignPrefixes = {
   default: "\x19Ethereum Signed Message:\n",
   klaytn: "\x19Klaytn Signed Message:\n",

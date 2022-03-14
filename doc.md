@@ -1,25 +1,44 @@
-## Wyvern Protocol
+# Wyvern Protocol
 
-### EIP Protocol
+## 交易過程
 
-#### EIP-20
+可以借鑑 Opensea 官方的買賣流程來進行參考
 
-- TokenRecipient
+### 販賣
 
-#### 
+1. 每個新帳戶第一次發布作品時，需要進行初始化錢包操作： 通過調用 `createdProxy` 在鏈上創建一個合約，即代理合約，對應的就是 `WyvernRegistry`
+2. 授權允許 `WyvernRegistry`合約將 NTF 所有者的資產轉移：通過調用 `setApprovalForAll` 來進行
+3. 簽名認證，確保當前操作屬於本人操作
+
+### 購買
+
+主要使用協議中 `atomicMatch` 函數: 
+1. 轉帳該筆金額的 97.5% 給NFT 原擁有者
+2. 轉帳該筆金額的 2.5% 給 OpenSea
+3. 通過 proxy 合約，調用 NFT 合約的 `transferFrom`，轉移 NFT
+
+## 相關 EIP
+
+- [EIP-20](https://eips.ethereum.org/EIPS/eip-20)
+- [EIP-712](https://segmentfault.com/a/1190000015647458)
+- [EIP-721](https://learnblockchain.cn/docs/eips/eip-721.html)
+- [EIP-897](https://eips.ethereum.org/EIPS/eip-897)
+- [EIP-1155](https://zhuanlan.zhihu.com/p/389331603)
+- [EIP-1271](https://support.opensea.io/hc/zh-tw/articles/4449355421075-%E6%99%BA%E8%83%BD%E5%90%88%E7%B4%84%E5%8D%87%E7%B4%9A-%E7%B0%BD%E5%90%8D%E8%AB%8B%E6%B1%82%E6%98%AF%E4%BB%80%E9%BA%BC%E6%A8%A3%E7%9A%84-) 
+
+## 協議描述
 
 ### Asserting registry
 
 The order maker may check that they and their counterparty are using valid registries (though registries are also whitelisted in the Exchange contract).
 
-> 訂單生成者可以檢查他們和他們的交易對手是否使用有效的註冊表（儘管註冊表也在交易所合同中列入白名單）。
-
-- ProxyRegistry
+> 檢查 `ProxyRegistry` 的合約地址是否已被註冊(無論該地址是否在白名單中)，如果沒有，則表示該用戶還未部署 `ProxyRegistry`
 
 ### Asserting calldata
 
 The bulk of the logic in an order is in constructing the predicate over the call and countercall. Each order's static callback (predicate function) receives all parameters of the call, counterparty call, and order metadata (Ether value, timestamp, matching address) and must decide whether to allow the order to match, and if so how much to fill it.
 
+> 
 > 訂單中的大部分邏輯是在調用和反調用上構造謂詞。每個訂單的靜態回調（謂詞函數）接收調用、交易對手調用和訂單元數據（以太幣值、時間戳、匹配地址）的所有參數，並且必須決定是否允許訂單匹配，如果允許，填寫多少。
 
 ### Call
