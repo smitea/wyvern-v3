@@ -1,0 +1,5 @@
+{
+    "solidity.compileUsingLocalVersion": "/Volumes/Developer/blockchain/wyvern-v3/soljson-v0.7.5+commit.eb77ed08.js",
+    "solidity.defaultCompiler": "remote",
+    "solidity.compileUsingRemoteVersion": "v0.7.5+commit.eb77ed08"
+}

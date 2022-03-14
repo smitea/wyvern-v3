@@ -1,9 +1,3 @@
-/*
-
-  OwnableDelegateProxy
-
-*/
-
 pragma solidity 0.7.5;
 
 import "./proxy/OwnedUpgradeabilityProxy.sol";
@@ -13,14 +7,14 @@ import "./proxy/OwnedUpgradeabilityProxy.sol";
  * @author Wyvern Protocol Developers
  */
 contract OwnableDelegateProxy is OwnedUpgradeabilityProxy {
-
-    constructor(address owner, address initialImplementation, bytes memory data)
-        public
-    {
+    constructor(
+        address owner,
+        address initialImplementation,
+        bytes memory data
+    ) public {
         setUpgradeabilityOwner(owner);
         _upgradeTo(initialImplementation);
-        (bool success,) = initialImplementation.delegatecall(data);
+        (bool success, ) = initialImplementation.delegatecall(data);
         require(success, "OwnableDelegateProxy failed implementation");
     }
-
 }

@@ -1,0 +1,501 @@
+{
+	"compiler": {
+		"version": "0.7.5+commit.eb77ed08"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "DELAY_PERIOD",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "contracts",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "delegateProxyImplementation",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "endGrantAuthentication",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "authAddress",
+						"type": "address"
+					}
+				],
+				"name": "grantInitialAuthentication",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "initialAddressSet",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "name",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "pending",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "proxies",
+				"outputs": [
+					{
+						"internalType": "contract OwnableDelegateProxy",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "registerProxy",
+				"outputs": [
+					{
+						"internalType": "contract OwnableDelegateProxy",
+						"name": "proxy",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "registerProxyFor",
+				"outputs": [
+					{
+						"internalType": "contract OwnableDelegateProxy",
+						"name": "proxy",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "registerProxyOverride",
+				"outputs": [
+					{
+						"internalType": "contract OwnableDelegateProxy",
+						"name": "proxy",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "revokeAuthentication",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "startGrantAuthentication",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "transferAccessTo",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Wyvern Protocol Developers",
+			"kind": "dev",
+			"methods": {
+				"endGrantAuthentication(address)": {
+					"details": "ProxyRegistry owner only",
+					"params": {
+						"addr": "Address to which to grant permissions"
+					}
+				},
+				"grantInitialAuthentication(address)": {
+					"details": "No delay, can only be called once - after that the standard registry process with a delay must be used",
+					"params": {
+						"authAddress": "Address of the contract to grant authentication"
+					}
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"registerProxy()": {
+					"details": "Must be called by the user which the proxy is for, creates a new AuthenticatedProxy",
+					"returns": {
+						"proxy": "New AuthenticatedProxy contract"
+					}
+				},
+				"registerProxyFor(address)": {
+					"details": "Can be called by any user",
+					"returns": {
+						"proxy": "New AuthenticatedProxy contract"
+					}
+				},
+				"registerProxyOverride()": {
+					"details": "Must be called by the user which the proxy is for, creates a new AuthenticatedProxy",
+					"returns": {
+						"proxy": "New AuthenticatedProxy contract"
+					}
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"revokeAuthentication(address)": {
+					"details": "ProxyRegistry owner only",
+					"params": {
+						"addr": "Address of which to revoke permissions"
+					}
+				},
+				"startGrantAuthentication(address)": {
+					"details": "ProxyRegistry owner only",
+					"params": {
+						"addr": "Address to which to grant permissions"
+					}
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
+			"title": "WyvernRegistry",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"endGrantAuthentication(address)": {
+					"notice": "End the process to enable access for specified contract after delay period has passed."
+				},
+				"grantInitialAuthentication(address)": {
+					"notice": "Grant authentication to the initial Exchange protocol contract"
+				},
+				"registerProxy()": {
+					"notice": "Register a proxy contract with this registry"
+				},
+				"registerProxyFor(address)": {
+					"notice": "Register a proxy contract with this registry"
+				},
+				"registerProxyOverride()": {
+					"notice": "Register a proxy contract with this registry, overriding any existing proxy"
+				},
+				"revokeAuthentication(address)": {
+					"notice": "Revoke access for specified contract. Can be done instantly."
+				},
+				"startGrantAuthentication(address)": {
+					"notice": "Start the process to enable access for specified contract. Subject to delay period."
+				},
+				"transferAccessTo(address,address)": {
+					"notice": "Transfer access"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/WyvernRegistry.sol": "WyvernRegistry"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/WyvernRegistry.sol": {
+			"keccak256": "0xf71194ac9be8409a7324e5f606fefb1adf77e923b7bdc3491bc84113e1ef4f75",
+			"urls": [
+				"bzz-raw://d1d136a857ce6ef92267fc5550bad309d02cbcff5c0c135ca3b42e4cf14e3a11",
+				"dweb:/ipfs/QmZoXrF39x3UiXF2PEUDqieiGaLnQv9HeYwb5T4VMiZznq"
+			]
+		},
+		"contracts/registry/AuthenticatedProxy.sol": {
+			"keccak256": "0xdb9422de8b4cea907b4c43ce3998da03f316f9a970a612809f7a6b1f5e2d7ace",
+			"urls": [
+				"bzz-raw://748bb947597991219a4eb165e5157cdde0160fcd7a781aad61baaff66abd5dca",
+				"dweb:/ipfs/QmSUwDpXWD2J5GW3Ww3tL5DXrSkPjQn4QC7VrB8U1Qsddj"
+			]
+		},
+		"contracts/registry/OwnableDelegateProxy.sol": {
+			"keccak256": "0xdaa4b6f33d9d8581a00552e0ae7a3aea07508664b02b499c38f1257b2b6afda8",
+			"urls": [
+				"bzz-raw://bfa145126d8a8e0dbf675fcbb975da64f304d54f2d331e2298e6de2d45d987a8",
+				"dweb:/ipfs/QmTU9MGcmfVHKf4YNmpznX44gph3BXYRHhrGEKDSFXqd8u"
+			]
+		},
+		"contracts/registry/ProxyRegistry.sol": {
+			"keccak256": "0x1a15211f90585630789f1ba25915c1e105436e67c50716fa1bb89fe46e3df9c8",
+			"urls": [
+				"bzz-raw://eb681704761c1da849c8a15ec4feef3376404631c0f7ff60728f41ec3161f65b",
+				"dweb:/ipfs/QmWEdB8Q3yjXb5QgXMBWzZVNVTvj37g7R9jnrr6b1cm1pW"
+			]
+		},
+		"contracts/registry/ProxyRegistryInterface.sol": {
+			"keccak256": "0xc572d393e24e48b41d097d2f6dff08a69be08984057ad9ec2943c704329425f1",
+			"urls": [
+				"bzz-raw://92724744c7654ba58d93bff5f1719fd30c51de38e394fe9a9bde0bdc7b5662cf",
+				"dweb:/ipfs/QmVeTFeUsR6zVRfAG2UeZkPrJrYuT5piocs2XEBwwnKpug"
+			]
+		},
+		"contracts/registry/TokenRecipient.sol": {
+			"keccak256": "0xae425d51e45288be6e5698bc04f934fcbcfe5ecf91f72dfd2b0299f21de25bea",
+			"urls": [
+				"bzz-raw://ff0b76f651933c845037cba4ec64a5871b4ffa90203fc92b26db3b372cbef1c3",
+				"dweb:/ipfs/QmczU6mp7rjmBRXTVHkrcmGtfyvf5LgBZGugVUizZgvEAf"
+			]
+		},
+		"contracts/registry/proxy/OwnedUpgradeabilityProxy.sol": {
+			"keccak256": "0x37963170aa04a53665d9da9f10b45b5e92f2bc7d4a935182ec62fd5124265264",
+			"urls": [
+				"bzz-raw://25198ac24ca8e68cdda02067efed6c11bced801d04ae1f8bf6e9790377e54cf7",
+				"dweb:/ipfs/QmWQXLQtKPK2wG7YZhUNyJUJbcpsv6VuLxGPrGEKbxdLot"
+			]
+		},
+		"contracts/registry/proxy/OwnedUpgradeabilityStorage.sol": {
+			"keccak256": "0xa2549406175c4b5ecbc86a43e79bb91d6388e1b3a8004f8f0d1db0597d30f987",
+			"urls": [
+				"bzz-raw://8852e2e97479bd0a750116fa44f27bd2da365cf456961dcb2f9fd25de44bc49a",
+				"dweb:/ipfs/QmddTfs3GSY6fzorjBMBpvzTkib6Sieh8BphSTwrQNbsfK"
+			]
+		},
+		"contracts/registry/proxy/Proxy.sol": {
+			"keccak256": "0x67e8c0d18838416080a22a9f3ae1c4fbefca1528390da31fe3ece0850f096de8",
+			"urls": [
+				"bzz-raw://a028a9f3ebb13d09473795abdbc42470469109931a7958d664d5529ec06e023f",
+				"dweb:/ipfs/QmVcY4fMpjUFhVqTKxxaGapscz2v412bD6rJrQRgTbfVSM"
+			]
+		},
+		"openzeppelin-solidity/contracts/access/Ownable.sol": {
+			"keccak256": "0x15e2d5bd4c28a88548074c54d220e8086f638a71ed07e6b3ba5a70066fcf458d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://90faf5851c02f9bd42c5bfb54d4f0421a2612f50ab80b2c4fa24fa3792071cc2",
+				"dweb:/ipfs/QmRGM4F2PcGVF85aTfaA9YBhCHHDqrMhRjyp6fGeBTtirb"
+			]
+		},
+		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
+			"keccak256": "0xcc78a17dd88fa5a2edc60c8489e2f405c0913b377216a5b26b35656b2d0dab52",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://526dc85e1f9b9b45830e202568d267d93dde7a4fcccf4ad7798dadcd92304d3c",
+				"dweb:/ipfs/QmaoXMB972J3cSDLtBq3xBo4jLwqD2uzXTwujtSPqkYVhR"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/ERC20.sol": {
+			"keccak256": "0xca0c2396dbeb3503b51abf4248ebf77a1461edad513c01529df51850a012bee3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://991b44ff44e0496e8554a90f4c0512c28faed45104d40430019f3c67ea67740e",
+				"dweb:/ipfs/Qmc3nRapVbcctELoZS5qe17zLkFB3bETBfwzCTMF1CSuGE"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0x5f02220344881ce43204ae4a6281145a67bc52c2bb1290a791857df3d19d78f5",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://24427744bd3e6cb73c17010119af12a318289c0253a4d9acb8576c9fb3797b08",
+				"dweb:/ipfs/QmTLDqpKRBuxGxRAmjgXt9AkXyACW3MtKzi7PYjm5iMfGC"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/Context.sol": {
+			"keccak256": "0x8d3cb350f04ff49cfb10aef08d87f19dcbaecc8027b0bed12f3275cd12f38cf0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ded47ec7c96750f9bd04bbbc84f659992d4ba901cb7b532a52cd468272cf378f",
+				"dweb:/ipfs/QmfBrGtQP7rZEqEg6Wz6jh2N2Kukpj1z5v3CGWmAqrzm96"
+			]
+		}
+	},
+	"version": 1
+}

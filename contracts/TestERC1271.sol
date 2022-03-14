@@ -9,8 +9,7 @@ pragma solidity 0.7.5;
 import "./lib/EIP1271.sol";
 
 contract TestERC1271 is ERC1271 {
-
-    bytes4 constant internal SIGINVALID = 0x00000000;
+    bytes4 internal constant SIGINVALID = 0x00000000;
 
     address internal owner;
 
@@ -19,9 +18,7 @@ contract TestERC1271 is ERC1271 {
      *
      * @param ownerAddr Address of owner
      */
-    function setOwner (address ownerAddr)
-        public
-    {
+    function setOwner(address ownerAddr) public {
         owner = ownerAddr;
     }
 
@@ -32,20 +29,20 @@ contract TestERC1271 is ERC1271 {
      * @param _signature Signature encoded as (bytes32 r, bytes32 s, uint8 v)
      * @return magicValue Magic value if valid, zero-value otherwise
      */
-    function isValidSignature(
-        bytes32 _hash,
-        bytes memory _signature)
-        override
+    function isValidSignature(bytes32 _hash, bytes memory _signature)
         public
         view
+        override
         returns (bytes4 magicValue)
     {
-        (uint8 v, bytes32 r, bytes32 s) = abi.decode(_signature, (uint8, bytes32, bytes32));
+        (uint8 v, bytes32 r, bytes32 s) = abi.decode(
+            _signature,
+            (uint8, bytes32, bytes32)
+        );
         if (owner == ecrecover(_hash, v, r, s)) {
             return MAGICVALUE;
         } else {
             return SIGINVALID;
         }
     }
-
 }

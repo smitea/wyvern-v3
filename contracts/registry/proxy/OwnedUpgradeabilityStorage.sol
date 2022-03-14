@@ -5,7 +5,6 @@ pragma solidity 0.7.5;
  * @dev This contract keeps track of the upgradeability owner
  */
 contract OwnedUpgradeabilityStorage {
-
     // Current implementation
     address internal _implementation;
 
@@ -26,5 +25,4 @@ contract OwnedUpgradeabilityStorage {
     function setUpgradeabilityOwner(address newUpgradeabilityOwner) internal {
         _upgradeabilityOwner = newUpgradeabilityOwner;
     }
-
 }

@@ -1,0 +1,67 @@
+{
+	"compiler": {
+		"version": "0.7.5+commit.eb77ed08"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "upgradeabilityOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "This contract keeps track of the upgradeability owner",
+			"kind": "dev",
+			"methods": {
+				"upgradeabilityOwner()": {
+					"details": "Tells the address of the owner",
+					"returns": {
+						"_0": "the address of the owner"
+					}
+				}
+			},
+			"title": "OwnedUpgradeabilityStorage",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/registry/proxy/OwnedUpgradeabilityStorage.sol": "OwnedUpgradeabilityStorage"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/registry/proxy/OwnedUpgradeabilityStorage.sol": {
+			"keccak256": "0xa2549406175c4b5ecbc86a43e79bb91d6388e1b3a8004f8f0d1db0597d30f987",
+			"urls": [
+				"bzz-raw://8852e2e97479bd0a750116fa44f27bd2da365cf456961dcb2f9fd25de44bc49a",
+				"dweb:/ipfs/QmddTfs3GSY6fzorjBMBpvzTkib6Sieh8BphSTwrQNbsfK"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,111 @@
+{
+	"compiler": {
+		"version": "0.7.5+commit.eb77ed08"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_hash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_signature",
+						"type": "bytes"
+					}
+				],
+				"name": "isValidSignature",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "magicValue",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "ownerAddr",
+						"type": "address"
+					}
+				],
+				"name": "setOwner",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"isValidSignature(bytes32,bytes)": {
+					"params": {
+						"_hash": "Hash of the data to be signed",
+						"_signature": "Signature encoded as (bytes32 r, bytes32 s, uint8 v)"
+					},
+					"returns": {
+						"magicValue": "Magic value if valid, zero-value otherwise"
+					}
+				},
+				"setOwner(address)": {
+					"params": {
+						"ownerAddr": "Address of owner"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"isValidSignature(bytes32,bytes)": {
+					"notice": "Check if a signature is valid"
+				},
+				"setOwner(address)": {
+					"notice": "Set a new owner (for testing)"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/TestERC1271.sol": "TestERC1271"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/TestERC1271.sol": {
+			"keccak256": "0xaa2335ff0225e87c4d647a7106ae71c1fe2730149265fb9cf74bded7f71c69c3",
+			"urls": [
+				"bzz-raw://6c479cd10aac67530a9c64c28992cad1106ddb7c626dc39e91df277b90e0472d",
+				"dweb:/ipfs/Qmaf9uPCrhxzKpYicHLyhPyHCfu4yBDrtjAj7p7BTZLXBk"
+			]
+		},
+		"contracts/lib/EIP1271.sol": {
+			"keccak256": "0x0a76a012fc22b2ca1df1727ecc8368c76cdbe2aa90b3899e2fc8592481f99f30",
+			"urls": [
+				"bzz-raw://8998a8eed5d38a17ed68134077658f77761c36341d8acfe808686e16fd3ef305",
+				"dweb:/ipfs/QmPdvZeAUgk6TFid8qYbHftDHUL6SymavveXkjsjgQFtot"
+			]
+		}
+	},
+	"version": 1
+}

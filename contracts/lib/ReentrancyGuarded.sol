@@ -11,15 +11,13 @@ pragma solidity 0.7.5;
  * @author Wyvern Protocol Developers
  */
 contract ReentrancyGuarded {
-
     bool reentrancyLock = false;
 
     /* Prevent a contract function from being reentrant-called. */
-    modifier reentrancyGuard {
+    modifier reentrancyGuard() {
         require(!reentrancyLock, "Reentrancy detected");
         reentrancyLock = true;
         _;
         reentrancyLock = false;
     }
-
 }

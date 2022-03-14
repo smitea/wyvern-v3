@@ -1,0 +1,252 @@
+{
+	"compiler": {
+		"version": "0.7.5+commit.eb77ed08"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "ProxyOwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "implementation",
+						"type": "address"
+					}
+				],
+				"name": "Upgraded",
+				"type": "event"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "fallback"
+			},
+			{
+				"inputs": [],
+				"name": "implementation",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "proxyOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "proxyType",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "proxyTypeId",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferProxyOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "implementation",
+						"type": "address"
+					}
+				],
+				"name": "upgradeTo",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "implementation",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "upgradeToAndCall",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "upgradeabilityOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "This contract combines an upgradeability proxy with basic authorization control functionalities",
+			"events": {
+				"ProxyOwnershipTransferred(address,address)": {
+					"details": "Event to show ownership has been transferred",
+					"params": {
+						"newOwner": "representing the address of the new owner",
+						"previousOwner": "representing the address of the previous owner"
+					}
+				},
+				"Upgraded(address)": {
+					"details": "This event will be emitted every time the implementation gets upgraded",
+					"params": {
+						"implementation": "representing the address of the upgraded implementation"
+					}
+				}
+			},
+			"kind": "dev",
+			"methods": {
+				"implementation()": {
+					"details": "Tells the address of the current implementation",
+					"returns": {
+						"_0": "address of the current implementation"
+					}
+				},
+				"proxyOwner()": {
+					"details": "Tells the address of the proxy owner",
+					"returns": {
+						"_0": "the address of the proxy owner"
+					}
+				},
+				"proxyType()": {
+					"details": "Tells the proxy type (EIP 897)",
+					"returns": {
+						"proxyTypeId": "Proxy type, 2 for forwarding proxy"
+					}
+				},
+				"transferProxyOwnership(address)": {
+					"details": "Allows the current owner to transfer control of the contract to a newOwner.",
+					"params": {
+						"newOwner": "The address to transfer ownership to."
+					}
+				},
+				"upgradeTo(address)": {
+					"details": "Allows the upgradeability owner to upgrade the current implementation of the proxy.",
+					"params": {
+						"implementation": "representing the address of the new implementation to be set."
+					}
+				},
+				"upgradeToAndCall(address,bytes)": {
+					"details": "Allows the upgradeability owner to upgrade the current implementation of the proxy and delegatecall the new implementation for initialization.",
+					"params": {
+						"data": "represents the msg.data to bet sent in the low level call. This parameter may include the function signature of the implementation to be called with the needed payload",
+						"implementation": "representing the address of the new implementation to be set."
+					}
+				},
+				"upgradeabilityOwner()": {
+					"details": "Tells the address of the owner",
+					"returns": {
+						"_0": "the address of the owner"
+					}
+				}
+			},
+			"title": "OwnedUpgradeabilityProxy",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/registry/proxy/OwnedUpgradeabilityProxy.sol": "OwnedUpgradeabilityProxy"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/registry/proxy/OwnedUpgradeabilityProxy.sol": {
+			"keccak256": "0x37963170aa04a53665d9da9f10b45b5e92f2bc7d4a935182ec62fd5124265264",
+			"urls": [
+				"bzz-raw://25198ac24ca8e68cdda02067efed6c11bced801d04ae1f8bf6e9790377e54cf7",
+				"dweb:/ipfs/QmWQXLQtKPK2wG7YZhUNyJUJbcpsv6VuLxGPrGEKbxdLot"
+			]
+		},
+		"contracts/registry/proxy/OwnedUpgradeabilityStorage.sol": {
+			"keccak256": "0xa2549406175c4b5ecbc86a43e79bb91d6388e1b3a8004f8f0d1db0597d30f987",
+			"urls": [
+				"bzz-raw://8852e2e97479bd0a750116fa44f27bd2da365cf456961dcb2f9fd25de44bc49a",
+				"dweb:/ipfs/QmddTfs3GSY6fzorjBMBpvzTkib6Sieh8BphSTwrQNbsfK"
+			]
+		},
+		"contracts/registry/proxy/Proxy.sol": {
+			"keccak256": "0x67e8c0d18838416080a22a9f3ae1c4fbefca1528390da31fe3ece0850f096de8",
+			"urls": [
+				"bzz-raw://a028a9f3ebb13d09473795abdbc42470469109931a7958d664d5529ec06e023f",
+				"dweb:/ipfs/QmVcY4fMpjUFhVqTKxxaGapscz2v412bD6rJrQRgTbfVSM"
+			]
+		}
+	},
+	"version": 1
+}

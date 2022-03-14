@@ -1,0 +1,427 @@
+{
+	"compiler": {
+		"version": "0.7.5+commit.eb77ed08"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "ReceivedEther",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "ReceivedTokens",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "revoked",
+						"type": "bool"
+					}
+				],
+				"name": "Revoked",
+				"type": "event"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "fallback"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addrUser",
+						"type": "address"
+					},
+					{
+						"internalType": "contract ProxyRegistry",
+						"name": "addrRegistry",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "dest",
+						"type": "address"
+					},
+					{
+						"internalType": "enum AuthenticatedProxy.HowToCall",
+						"name": "howToCall",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "proxy",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "result",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "dest",
+						"type": "address"
+					},
+					{
+						"internalType": "enum AuthenticatedProxy.HowToCall",
+						"name": "howToCall",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "proxyAssert",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "receiveApproval",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "registry",
+				"outputs": [
+					{
+						"internalType": "contract ProxyRegistry",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "revoked",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "revoke",
+						"type": "bool"
+					}
+				],
+				"name": "setRevoke",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "upgradeabilityOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "user",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Wyvern Protocol Developers",
+			"details": "Proxy contract to hold access to assets on behalf of a user (e.g. ERC20 approve) and execute calls under particular conditions.",
+			"kind": "dev",
+			"methods": {
+				"initialize(address,address)": {
+					"params": {
+						"addrRegistry": "Address of ProxyRegistry contract which will manage this proxy",
+						"addrUser": "Address of user on whose behalf this proxy will act"
+					}
+				},
+				"proxy(address,uint8,bytes)": {
+					"details": "Can be called by the user, or by a contract authorized by the registry as long as the user has not revoked access",
+					"params": {
+						"data": "Calldata to send",
+						"dest": "Address to which the call will be sent",
+						"howToCall": "Which kind of call to make"
+					},
+					"returns": {
+						"result": "Result of the call (success or failure)"
+					}
+				},
+				"proxyAssert(address,uint8,bytes)": {
+					"details": "Same functionality as `proxy`, just asserts the return value",
+					"params": {
+						"data": "Calldata to send",
+						"dest": "Address to which the call will be sent",
+						"howToCall": "What kind of call to make"
+					}
+				},
+				"receiveApproval(address,uint256,address,bytes)": {
+					"details": "Receive tokens and generate a log event",
+					"params": {
+						"extraData": "Additional data to log",
+						"from": "Address from which to transfer tokens",
+						"token": "Address of token",
+						"value": "Amount of tokens to transfer"
+					}
+				},
+				"setRevoke(bool)": {
+					"details": "Can be called by the user only",
+					"params": {
+						"revoke": "Whether or not to revoke access"
+					}
+				},
+				"upgradeabilityOwner()": {
+					"details": "Tells the address of the owner",
+					"returns": {
+						"_0": "the address of the owner"
+					}
+				}
+			},
+			"title": "AuthenticatedProxy",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"initialize(address,address)": {
+					"notice": "Initialize an AuthenticatedProxy"
+				},
+				"proxy(address,uint8,bytes)": {
+					"notice": "Execute a message call from the proxy contract"
+				},
+				"proxyAssert(address,uint8,bytes)": {
+					"notice": "Execute a message call and assert success"
+				},
+				"setRevoke(bool)": {
+					"notice": "Set the revoked flag (allows a user to revoke ProxyRegistry access)"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/registry/AuthenticatedProxy.sol": "AuthenticatedProxy"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/registry/AuthenticatedProxy.sol": {
+			"keccak256": "0xdb9422de8b4cea907b4c43ce3998da03f316f9a970a612809f7a6b1f5e2d7ace",
+			"urls": [
+				"bzz-raw://748bb947597991219a4eb165e5157cdde0160fcd7a781aad61baaff66abd5dca",
+				"dweb:/ipfs/QmSUwDpXWD2J5GW3Ww3tL5DXrSkPjQn4QC7VrB8U1Qsddj"
+			]
+		},
+		"contracts/registry/OwnableDelegateProxy.sol": {
+			"keccak256": "0xdaa4b6f33d9d8581a00552e0ae7a3aea07508664b02b499c38f1257b2b6afda8",
+			"urls": [
+				"bzz-raw://bfa145126d8a8e0dbf675fcbb975da64f304d54f2d331e2298e6de2d45d987a8",
+				"dweb:/ipfs/QmTU9MGcmfVHKf4YNmpznX44gph3BXYRHhrGEKDSFXqd8u"
+			]
+		},
+		"contracts/registry/ProxyRegistry.sol": {
+			"keccak256": "0x1a15211f90585630789f1ba25915c1e105436e67c50716fa1bb89fe46e3df9c8",
+			"urls": [
+				"bzz-raw://eb681704761c1da849c8a15ec4feef3376404631c0f7ff60728f41ec3161f65b",
+				"dweb:/ipfs/QmWEdB8Q3yjXb5QgXMBWzZVNVTvj37g7R9jnrr6b1cm1pW"
+			]
+		},
+		"contracts/registry/ProxyRegistryInterface.sol": {
+			"keccak256": "0xc572d393e24e48b41d097d2f6dff08a69be08984057ad9ec2943c704329425f1",
+			"urls": [
+				"bzz-raw://92724744c7654ba58d93bff5f1719fd30c51de38e394fe9a9bde0bdc7b5662cf",
+				"dweb:/ipfs/QmVeTFeUsR6zVRfAG2UeZkPrJrYuT5piocs2XEBwwnKpug"
+			]
+		},
+		"contracts/registry/TokenRecipient.sol": {
+			"keccak256": "0xae425d51e45288be6e5698bc04f934fcbcfe5ecf91f72dfd2b0299f21de25bea",
+			"urls": [
+				"bzz-raw://ff0b76f651933c845037cba4ec64a5871b4ffa90203fc92b26db3b372cbef1c3",
+				"dweb:/ipfs/QmczU6mp7rjmBRXTVHkrcmGtfyvf5LgBZGugVUizZgvEAf"
+			]
+		},
+		"contracts/registry/proxy/OwnedUpgradeabilityProxy.sol": {
+			"keccak256": "0x37963170aa04a53665d9da9f10b45b5e92f2bc7d4a935182ec62fd5124265264",
+			"urls": [
+				"bzz-raw://25198ac24ca8e68cdda02067efed6c11bced801d04ae1f8bf6e9790377e54cf7",
+				"dweb:/ipfs/QmWQXLQtKPK2wG7YZhUNyJUJbcpsv6VuLxGPrGEKbxdLot"
+			]
+		},
+		"contracts/registry/proxy/OwnedUpgradeabilityStorage.sol": {
+			"keccak256": "0xa2549406175c4b5ecbc86a43e79bb91d6388e1b3a8004f8f0d1db0597d30f987",
+			"urls": [
+				"bzz-raw://8852e2e97479bd0a750116fa44f27bd2da365cf456961dcb2f9fd25de44bc49a",
+				"dweb:/ipfs/QmddTfs3GSY6fzorjBMBpvzTkib6Sieh8BphSTwrQNbsfK"
+			]
+		},
+		"contracts/registry/proxy/Proxy.sol": {
+			"keccak256": "0x67e8c0d18838416080a22a9f3ae1c4fbefca1528390da31fe3ece0850f096de8",
+			"urls": [
+				"bzz-raw://a028a9f3ebb13d09473795abdbc42470469109931a7958d664d5529ec06e023f",
+				"dweb:/ipfs/QmVcY4fMpjUFhVqTKxxaGapscz2v412bD6rJrQRgTbfVSM"
+			]
+		},
+		"openzeppelin-solidity/contracts/access/Ownable.sol": {
+			"keccak256": "0x15e2d5bd4c28a88548074c54d220e8086f638a71ed07e6b3ba5a70066fcf458d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://90faf5851c02f9bd42c5bfb54d4f0421a2612f50ab80b2c4fa24fa3792071cc2",
+				"dweb:/ipfs/QmRGM4F2PcGVF85aTfaA9YBhCHHDqrMhRjyp6fGeBTtirb"
+			]
+		},
+		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
+			"keccak256": "0xcc78a17dd88fa5a2edc60c8489e2f405c0913b377216a5b26b35656b2d0dab52",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://526dc85e1f9b9b45830e202568d267d93dde7a4fcccf4ad7798dadcd92304d3c",
+				"dweb:/ipfs/QmaoXMB972J3cSDLtBq3xBo4jLwqD2uzXTwujtSPqkYVhR"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/ERC20.sol": {
+			"keccak256": "0xca0c2396dbeb3503b51abf4248ebf77a1461edad513c01529df51850a012bee3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://991b44ff44e0496e8554a90f4c0512c28faed45104d40430019f3c67ea67740e",
+				"dweb:/ipfs/Qmc3nRapVbcctELoZS5qe17zLkFB3bETBfwzCTMF1CSuGE"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0x5f02220344881ce43204ae4a6281145a67bc52c2bb1290a791857df3d19d78f5",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://24427744bd3e6cb73c17010119af12a318289c0253a4d9acb8576c9fb3797b08",
+				"dweb:/ipfs/QmTLDqpKRBuxGxRAmjgXt9AkXyACW3MtKzi7PYjm5iMfGC"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/Context.sol": {
+			"keccak256": "0x8d3cb350f04ff49cfb10aef08d87f19dcbaecc8027b0bed12f3275cd12f38cf0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ded47ec7c96750f9bd04bbbc84f659992d4ba901cb7b532a52cd468272cf378f",
+				"dweb:/ipfs/QmfBrGtQP7rZEqEg6Wz6jh2N2Kukpj1z5v3CGWmAqrzm96"
+			]
+		}
+	},
+	"version": 1
+}
