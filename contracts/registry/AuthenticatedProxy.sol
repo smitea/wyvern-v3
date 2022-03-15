@@ -10,16 +10,16 @@ import "./proxy/OwnedUpgradeabilityStorage.sol";
  * @dev Proxy contract to hold access to assets on behalf of a user (e.g. ERC20 approve) and execute calls under particular conditions.
  */
 contract AuthenticatedProxy is TokenRecipient, OwnedUpgradeabilityStorage {
-    /* Whether initialized. */
+    /* Whether initialized. (当前初始化状态) */
     bool initialized = false;
 
-    /* Address which owns this proxy. */
+    /* Address which owns this proxy. (当前代理的用户地址<卖家>) */
     address public user;
 
-    /* Associated registry with contract authentication information. */
+    /* Associated registry with contract authentication information. (当前代理使用的注册器) */
     ProxyRegistry public registry;
 
-    /* Whether access has been revoked. */
+    /* Whether access has been revoked. (是否有注销权限) */
     bool public revoked;
 
     /* Delegate call could be used to atomically transfer multiple assets owned by the proxy contract with one order. */
@@ -32,12 +32,13 @@ contract AuthenticatedProxy is TokenRecipient, OwnedUpgradeabilityStorage {
     event Revoked(bool revoked);
 
     /**
-     * Initialize an AuthenticatedProxy
+     * Initialize an AuthenticatedProxy (初始化一个授权代理)
      *
-     * @param addrUser Address of user on whose behalf this proxy will act
-     * @param addrRegistry Address of ProxyRegistry contract which will manage this proxy
+     * @param addrUser Address of user on whose behalf this proxy will act (当前代理的用户地址)
+     * @param addrRegistry Address of ProxyRegistry contract which will manage this proxy (ProxyRegistry 合约地址，用于管理该代理的注册器地址)
      */
     function initialize(address addrUser, ProxyRegistry addrRegistry) public {
+        // 必须没有初始化过
         require(!initialized, "Authenticated proxy already initialized");
         initialized = true;
         user = addrUser;

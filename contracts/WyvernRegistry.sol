@@ -15,8 +15,11 @@ contract WyvernRegistry is ProxyRegistry {
 
     constructor() public {
         AuthenticatedProxy impl = new AuthenticatedProxy();
+        // 为合约代理初始化一个注册器地址
         impl.initialize(address(this), this);
+        // 授予可被注销的权限
         impl.setRevoke(true);
+        // 设置代理的地址
         delegateProxyImplementation = address(impl);
     }
 

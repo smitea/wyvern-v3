@@ -1,23 +1,28 @@
 # Wyvern Protocol
 
-## 交易過程
+## 交易过程
 
-可以借鑑 Opensea 官方的買賣流程來進行參考
+可以借鉴 Opensea 买卖流程来进行参考
 
-### 販賣
+### 发布作品
 
-1. 每個新帳戶第一次發布作品時，需要進行初始化錢包操作： 通過調用 `createdProxy` 在鏈上創建一個合約，即代理合約，對應的就是 `WyvernRegistry`
-2. 授權允許 `WyvernRegistry`合約將 NTF 所有者的資產轉移：通過調用 `setApprovalForAll` 來進行
-3. 簽名認證，確保當前操作屬於本人操作
+#### Initialize your wallet
 
-### 購買
+每个新账户第一次发布作品时，需要进行初始化钱包操作
 
-主要使用協議中 `atomicMatch` 函數: 
-1. 轉帳該筆金額的 97.5% 給NFT 原擁有者
-2. 轉帳該筆金額的 2.5% 給 OpenSea
-3. 通過 proxy 合約，調用 NFT 合約的 `transferFrom`，轉移 NFT
+1. Initialize your wallet: : 通过调用 `registerProxy` 在链上创建一个合约，即代理合约，对应的就是 `WyvernRegistry`
+2. 授权允许 `WyvernRegistry` 合约将 NFT 所有者的资产转移: 通过调用 `setApprovalForAll` 来进行
+3. 签名认证，确保当前操作属于本人操作
 
-## 相關 EIP
+### 购买
+
+使用协议中 `atomicMatch` 函数实现购买操作:
+
+1. 转账该笔金额的 97.5% 给 NFT 作者(版税交易)
+2. 转账该笔金额的 2.5% 给 OpenSea(平台费用交易)
+3. 通过 `proxy` 合约，调用 NFT 合约的 `transferFrom`, 转移 NFT 所有权
+
+## 相关 EIP
 
 - [EIP-20](https://eips.ethereum.org/EIPS/eip-20)
 - [EIP-712](https://segmentfault.com/a/1190000015647458)
@@ -26,13 +31,14 @@
 - [EIP-1155](https://zhuanlan.zhihu.com/p/389331603)
 - [EIP-1271](https://support.opensea.io/hc/zh-tw/articles/4449355421075-%E6%99%BA%E8%83%BD%E5%90%88%E7%B4%84%E5%8D%87%E7%B4%9A-%E7%B0%BD%E5%90%8D%E8%AB%8B%E6%B1%82%E6%98%AF%E4%BB%80%E9%BA%BC%E6%A8%A3%E7%9A%84-) 
 
-## 協議描述
+## 协议描述
 
 ### Asserting registry
 
 The order maker may check that they and their counterparty are using valid registries (though registries are also whitelisted in the Exchange contract).
 
-> 檢查 `ProxyRegistry` 的合約地址是否已被註冊(無論該地址是否在白名單中)，如果沒有，則表示該用戶還未部署 `ProxyRegistry`
+- 用户发布作品时，需要创建一个 `ProxyRegistry`
+- 检查 `ProxyRegistry` 的合约地址是否已被注册(无论该地址是否在白名单中),如果没有，则表示该用户还未部署 `ProxyRegistry`
 
 ### Asserting calldata
 

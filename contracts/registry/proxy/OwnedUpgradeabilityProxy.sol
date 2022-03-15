@@ -42,6 +42,7 @@ contract OwnedUpgradeabilityProxy is Proxy, OwnedUpgradeabilityStorage {
      * @param implementation representing the address of the new implementation to be set
      */
     function _upgradeTo(address implementation) internal {
+        // 断言代理合约实现的地址是否已被初始化
         require(
             _implementation != implementation,
             "Proxy already uses this implementation"

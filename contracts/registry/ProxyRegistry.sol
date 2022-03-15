@@ -79,10 +79,10 @@ contract ProxyRegistry is Ownable, ProxyRegistryInterface {
     }
 
     /**
-     * Register a proxy contract with this registry
+     * Register a proxy contract with this registry （注册一个代理合约）
      *
-     * @dev Must be called by the user which the proxy is for, creates a new AuthenticatedProxy
-     * @return proxy New AuthenticatedProxy contract
+     * @dev Must be called by the user which the proxy is for, creates a new AuthenticatedProxy (必须由需要发布作品的人来调用，该操作会创建一个 `AuthenticatedProxy` 实例)
+     * @return proxy New AuthenticatedProxy contract (返回一个 `AuthenticatedProxy` 合约实例)
      */
     function registerProxy() public returns (OwnableDelegateProxy proxy) {
         return registerProxyFor(msg.sender);
@@ -112,22 +112,25 @@ contract ProxyRegistry is Ownable, ProxyRegistryInterface {
     }
 
     /**
-     * Register a proxy contract with this registry
+     * Register a proxy contract with this registry (注册一个代理合约在该注册器中)
      *
-     * @dev Can be called by any user
-     * @return proxy New AuthenticatedProxy contract
+     * @dev Can be called by any user (任何用户都可以调用)
+     * @return proxy New AuthenticatedProxy contract (返回一个代理合约实例)
      */
     function registerProxyFor(address user)
         public
         returns (OwnableDelegateProxy proxy)
     {
+        // 是否已存在代理实例
         require(
             proxies[user] == OwnableDelegateProxy(0),
             "User already has a proxy"
         );
+        // 创建代理实例
         proxy = new OwnableDelegateProxy(
             user,
             delegateProxyImplementation,
+            // 执行初始化操作，调用 AuthenticatedProxy.initialize 函数
             abi.encodeWithSignature(
                 "initialize(address,address)",
                 user,
