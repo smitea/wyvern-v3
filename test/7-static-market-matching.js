@@ -55,9 +55,12 @@ contract('WyvernExchange', (accounts) =>
 		await registry.registerProxy({from: account_b})
 		let proxy2 = await registry.proxies(account_b)
 		assert.equal(true, proxy2.length > 0, 'no proxy address for account b')
-		
-		await Promise.all([erc1155.setApprovalForAll(proxy1,true,{from: account_a}),erc20.approve(proxy2,erc20MintAmount,{from: account_b})])
-		await Promise.all([erc1155.mint(account_a,tokenId,erc1155MintAmount),erc20.mint(account_b,erc20MintAmount)])
+			
+		await erc20.approve(proxy2,erc20MintAmount,{from: account_b})
+		await erc20.mint(account_b,erc20MintAmount)
+
+		await erc1155.setApprovalForAll(proxy1,true,{from: account_a})
+		await erc1155.mint(account_a,tokenId,erc1155MintAmount)
 
 		if (buyTokenId)
 			await erc1155.mint(account_a,buyTokenId,erc1155MintAmount)

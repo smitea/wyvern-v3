@@ -333,16 +333,16 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         address maker,
         Call memory call
     ) internal returns (bool) {
-        /* Assert valid registry. */
+        /* Assert valid registry. () */
         require(registries[address(registry)]);
 
-        /* Assert target exists. */
+        /* Assert target exists. (验证调用对象地址是否存在) */
         require(exists(call.target), "Call target does not exist");
 
-        /* Retrieve delegate proxy contract. */
+        /* Retrieve delegate proxy contract. (获取委托代理合约) */
         OwnableDelegateProxy delegateProxy = registry.proxies(maker);
 
-        /* Assert existence. */
+        /* Assert existence.  */
         require(
             delegateProxy != OwnableDelegateProxy(0),
             "Delegate proxy does not exist for maker"
@@ -435,25 +435,25 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
     ) internal reentrancyGuard {
         /* CHECKS */
 
-        /* Calculate first order hash. */
+        /* Calculate first order hash. (计算卖家订单的 Hash) */
         bytes32 firstHash = hashOrder(firstOrder);
 
-        /* Check first order validity. */
+        /* Check first order validity. （验证卖家订单的有效性） */
         require(
             validateOrderParameters(firstOrder, firstHash),
             "First order has invalid parameters"
         );
 
-        /* Calculate second order hash. */
+        /* Calculate second order hash. (计算买家订单的 Hash) */
         bytes32 secondHash = hashOrder(secondOrder);
 
-        /* Check second order validity. */
+        /* Check second order validity. (检查卖家订单的有效性) */
         require(
             validateOrderParameters(secondOrder, secondHash),
             "Second order has invalid parameters"
         );
 
-        /* Prevent self-matching (possibly unnecessary, but safer). */
+        /* Prevent self-matching (possibly unnecessary, but safer). (保证这是两笔独立的订单) */
         require(firstHash != secondHash, "Self-matching orders is prohibited");
 
         {

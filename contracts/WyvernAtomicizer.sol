@@ -13,12 +13,19 @@ pragma solidity 0.7.5;
  * @author Wyvern Protocol Developers
  */
 library WyvernAtomicizer {
+
     function atomicize(
         address[] calldata addrs,
         uint256[] calldata values,
         uint256[] calldata calldataLengths,
         bytes calldata calldatas
     ) external {
+        // addrs (合约的调用地址列表)
+        // values (无))
+        // calldataLengths(回调代码块长度 - 2 / 2)
+        // calldatas(回调代码块)
+
+        // 校验参数的列表长度是否相等
         require(
             addrs.length == values.length &&
                 addrs.length == calldataLengths.length,

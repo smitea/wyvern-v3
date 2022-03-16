@@ -4,9 +4,7 @@
 
 可以借鉴 Opensea 买卖流程来进行参考
 
-### 发布作品
-
-#### Initialize your wallet
+### 创建订单
 
 每个新账户第一次发布作品时，需要进行初始化钱包操作
 
@@ -21,6 +19,9 @@
 1. 转账该笔金额的 97.5% 给 NFT 作者(版税交易)
 2. 转账该笔金额的 2.5% 给 OpenSea(平台费用交易)
 3. 通过 `proxy` 合约，调用 NFT 合约的 `transferFrom`, 转移 NFT 所有权
+
+### 取消订单
+
 
 ## 相关 EIP
 
@@ -37,21 +38,23 @@
 
 The order maker may check that they and their counterparty are using valid registries (though registries are also whitelisted in the Exchange contract).
 
-- 用户发布作品时，需要创建一个 `ProxyRegistry`
+- 用户发布作品时，需要创建一个 `ProxyRegistry` 合约
 - 检查 `ProxyRegistry` 的合约地址是否已被注册(无论该地址是否在白名单中),如果没有，则表示该用户还未部署 `ProxyRegistry`
 
 ### Asserting calldata
 
 The bulk of the logic in an order is in constructing the predicate over the call and countercall. Each order's static callback (predicate function) receives all parameters of the call, counterparty call, and order metadata (Ether value, timestamp, matching address) and must decide whether to allow the order to match, and if so how much to fill it.
 
-> 
-> 訂單中的大部分邏輯是在調用和反調用上構造謂詞。每個訂單的靜態回調（謂詞函數）接收調用、交易對手調用和訂單元數據（以太幣值、時間戳、匹配地址）的所有參數，並且必須決定是否允許訂單匹配，如果允許，填寫多少。
+- `atomicMatch_` 中提供了大部分的静态回调地址作为参数，比如(订单数据，代理的注册器合约地址，代理的创建者地址以及其他支付代码块数据)，并且要在回调的代码块中实现如何处理订单和其 fill 值
 
 ### Call
 
 The first call is executed by the maker of the order through their proxy contract. The static callback receives all parameters - the call target, the call type (CALL or DELEGATECALL), and the call data - and must validate that the call is one which the maker is willing to perform (e.g. transferring a particular asset or set of assets).
 
-> 第一次調用由訂單製造者通過他們的代理合約執行。靜態回調接收所有參數——調用目標、調用類型（或）和調用數據——並且必須驗證調用是製造商願意執行的調用（例如轉移特定資產或一組資產）。CALLDELEGATECALL
+> 第一次调用由通过卖家的代理合约执行。 静态回调参数提供了 `Call` 结构: 调用目标、调用类型、执行的代码块, 并且必须验证该次调用是卖家将要执行的(比如转移特定资产或者一组资产)
+
+- 针对 `EIP-1155` 协议
+- 方便维护，可通过 `Call` 结构
 
 ### Countercall
 
