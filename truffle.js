@@ -36,6 +36,11 @@ module.exports = {
       network_id: '50',
       gas: 6700000
     },
+    ganache: {
+      host: 'localhost',
+      port: 7545,
+      network_id: '*'
+    },
     coverage: {
       host: 'localhost',
       port: 8545,

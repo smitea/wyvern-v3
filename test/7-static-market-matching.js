@@ -108,6 +108,9 @@ contract('WyvernExchange', (accounts) => {
 			salt: '12'
 		}
 
+		console.log("order01: %s", one)
+		console.log("order02: %s", two)
+
 		// 设置 NFT 和订单金额的转让处理
 		const firstData = erc1155c.methods.safeTransferFrom(
 			account_a,

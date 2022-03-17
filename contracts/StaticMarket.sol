@@ -37,33 +37,42 @@ contract StaticMarket {
             uint256[3] memory tokenIdAndNumeratorDenominator
         ) = abi.decode(extra, (address[2], uint256[3]));
 
+        // buyAmount
         require(
             tokenIdAndNumeratorDenominator[1] > 0,
             "anyERC20ForERC1155: numerator must be larger than zero"
         );
+        // sellingPrice
         require(
             tokenIdAndNumeratorDenominator[2] > 0,
             "anyERC20ForERC1155: denominator must be larger than zero"
         );
+        // erc1155.address
         require(
             addresses[2] == tokenGiveGet[0],
             "anyERC1155ForERC20: call target must equal address of token to give"
         );
+        // erc20.address
         require(
             addresses[5] == tokenGiveGet[1],
             "anyERC1155ForERC20: countercall target must equal address of token to get"
         );
 
         uint256[2] memory call_amounts = [
+            // buyAmount
             getERC1155AmountFromCalldata(data),
+            // buyAmount * sellingPrice * 0.75
             getERC20AmountFromCalldata(counterdata)
         ];
+
+        // new_fill = previousSecondFill + buyAmount
         uint256 new_fill = SafeMath.add(uints[5], call_amounts[0]);
         require(
             new_fill <= uints[1],
             "anyERC1155ForERC20: new fill exceeds maximum fill"
         );
         require(
+            // buyAmount != 0 && (buyAmount * sellingPrice * 0.75 == (sellingPrice * buyAmount))
             SafeMath.mul(tokenIdAndNumeratorDenominator[1], call_amounts[1]) ==
                 SafeMath.mul(
                     tokenIdAndNumeratorDenominator[2],

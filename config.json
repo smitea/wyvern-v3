@@ -31,6 +31,12 @@
       "StaticMarket": "0xa86AF1A5bB8AF2418500AAbdacB9B7d2217F91A5",
       "WyvernRegistry": "0x23d0a64aF6987A2d536B9c3bA72FAAf66c9D73b6",
       "WyvernExchange": "0xDBA99cE125C6140dC4b30D48cBdDc57Bc67dc2d1"
+    },
+    "ganache": {
+      "Migrations": "0x2F105DB0E5D7D9E909534f472C7d00252aCFEe9f",
+      "WyvernAtomicizer": "0x3B2b189d0ABe0351091916eAF501F2EfAe807b0a",
+      "WyvernStatic": "0x0F8dc5989725c2661c7C5850d61Bf789453153fe",
+      "StaticMarket": "0xB421C57AB532a6d150b8Ce210A7873EDa42CcAe4"
     }
   }
 }
