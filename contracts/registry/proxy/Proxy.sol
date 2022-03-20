@@ -26,6 +26,7 @@ abstract contract Proxy {
         require(_impl != address(0), "Proxy implementation required");
 
         assembly {
+            // 0x40内存中槽是特殊的：它包含“空闲内存指针”，它指向当前分配的内存的末尾
             let ptr := mload(0x40)
             calldatacopy(ptr, 0, calldatasize())
             let result := delegatecall(gas(), _impl, ptr, calldatasize(), 0, 0)

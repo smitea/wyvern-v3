@@ -19,11 +19,27 @@ contract StaticMarket {
     constructor() public {}
 
     function anyERC1155ForERC20(
+        // staticExtradata
         bytes memory extra,
+        // order.registry,
+        // order.maker,
+        // call.target,
+        // counterorder.registry,
+        // counterorder.maker,
+        // countercall.target,
+        // matcher
         address[7] memory addresses,
         AuthenticatedProxy.HowToCall[2] memory howToCalls,
+        // value,
+        // order.maximumFill,
+        // order.listingTime,
+        // order.expirationTime,
+        // counterorder.listingTime,
+        // fill
         uint256[6] memory uints,
+        // firstCall
         bytes memory data,
+        // secondCall
         bytes memory counterdata
     ) public pure returns (uint256) {
         require(uints[0] == 0, "anyERC1155ForERC20: Zero value required");
@@ -33,46 +49,46 @@ contract StaticMarket {
         );
 
         (
+            // ERC1155 合约地址
+            // ERC20 合约地址
             address[2] memory tokenGiveGet,
+            // 5 (TokenID), 1(买的份数), 10000(单价)
             uint256[3] memory tokenIdAndNumeratorDenominator
         ) = abi.decode(extra, (address[2], uint256[3]));
 
-        // buyAmount
         require(
             tokenIdAndNumeratorDenominator[1] > 0,
             "anyERC20ForERC1155: numerator must be larger than zero"
         );
-        // sellingPrice
         require(
             tokenIdAndNumeratorDenominator[2] > 0,
             "anyERC20ForERC1155: denominator must be larger than zero"
         );
-        // erc1155.address
+        // ERC 1155 合约地址
         require(
             addresses[2] == tokenGiveGet[0],
             "anyERC1155ForERC20: call target must equal address of token to give"
         );
-        // erc20.address
+        // ERC 20 合约地址
         require(
             addresses[5] == tokenGiveGet[1],
             "anyERC1155ForERC20: countercall target must equal address of token to get"
         );
 
+        // 买的份数, 买的的单价
         uint256[2] memory call_amounts = [
-            // buyAmount
             getERC1155AmountFromCalldata(data),
-            // buyAmount * sellingPrice * 0.75
             getERC20AmountFromCalldata(counterdata)
         ];
 
-        // new_fill = previousSecondFill + buyAmount
+        // Fill = fill + 买的份数
         uint256 new_fill = SafeMath.add(uints[5], call_amounts[0]);
         require(
             new_fill <= uints[1],
             "anyERC1155ForERC20: new fill exceeds maximum fill"
         );
+        // 买的份数 * (买的的单价 == 单价 * 买的份数) > 0
         require(
-            // buyAmount != 0 && (buyAmount * sellingPrice * 0.75 == (sellingPrice * buyAmount))
             SafeMath.mul(tokenIdAndNumeratorDenominator[1], call_amounts[1]) ==
                 SafeMath.mul(
                     tokenIdAndNumeratorDenominator[2],
@@ -351,7 +367,8 @@ contract StaticMarket {
                     amount,
                     ""
                 )
-            )
+            ),
+            "ERC1155Side check Failed"
         );
     }
 
@@ -370,7 +387,8 @@ contract StaticMarket {
                     to,
                     tokenId
                 )
-            )
+            ),
+            "ERC721Side check Failed"
         );
     }
 
@@ -389,7 +407,8 @@ contract StaticMarket {
                     to,
                     amount
                 )
-            )
+            ),
+            "ERC20Side check Failed"
         );
     }
 }

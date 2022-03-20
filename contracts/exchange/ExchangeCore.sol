@@ -29,15 +29,15 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
     struct Order {
         /* Order registry address. (注册地址) */
         address registry;
-        /* Order maker address. (卖家地址) */
+        /* Order maker address. */
         address maker;
-        /* Order static target. (默认为空地址) */
+        /* Order static target. */
         address staticTarget;
-        /* Order static selector. (默认为空地址) */
+        /* Order static selector. */
         bytes4 staticSelector;
-        /* Order static extradata. (扩展数据) */
+        /* Order static extradata. */
         bytes staticExtradata;
-        /* Order maximum fill factor. (订单实例能被创建的最大上限) */
+        /* Order maximum fill factor. */
         uint256 maximumFill;
         /* Order listing timestamp. (订单允许交易的时间 before) */
         uint256 listingTime;
@@ -334,7 +334,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         Call memory call
     ) internal returns (bool) {
         /* Assert valid registry. () */
-        require(registries[address(registry)]);
+        require(registries[address(registry)], "Assert valid registry failed");
 
         /* Assert target exists. (验证调用对象地址是否存在) */
         require(exists(call.target), "Call target does not exist");
@@ -498,7 +498,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
                 firstOrder.maker,
                 firstCall
             ),
-            "First call failed"
+            "first call failed"
         );
 
         /* Execute second call, assert success. */
@@ -508,7 +508,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
                 secondOrder.maker,
                 secondCall
             ),
-            "Second call failed"
+            "second call failed"
         );
 
         /* Static calls must happen after the effectful calls so that they can check the resulting state. */

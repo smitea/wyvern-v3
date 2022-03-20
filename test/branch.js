@@ -8,6 +8,7 @@ const TestERC1271 = artifacts.require('TestERC1271')
 const TestERC1155 = artifacts.require('TestERC1155')
 const StaticMarket = artifacts.require('./StaticMarket.sol')
 
+const { debug } = require('console')
 const { iteratee } = require('lodash')
 const Web3 = require('web3')
 const provider = new Web3.providers.HttpProvider('http://localhost:8545')
@@ -41,7 +42,7 @@ contract('WyvernExchange', (accounts) => {
     } = options
 
     // 部署合约
-    let { exchange, registry, statici } = await deploy_core_contracts()
+    let { exchange, registry, statici, atomicizer } = await deploy_core_contracts()
     let [erc20, erc1155] = await deploy([TestERC20, TestERC1155])
 
     // 注册代理合约，初始化钱包时需要签约代理 (卖方第一次发布作品时需要的操作)
@@ -64,6 +65,11 @@ contract('WyvernExchange', (accounts) => {
     // 为账户 A 铸造指定的 NFT 数量 (测试步骤)
     await erc1155.mint(account_a, tokenId, sellAmount)
 
+    // 获取 Atomiczer.atomicize 函数调用地址
+    const abi = [{ 'constant': false, 'inputs': [{ 'name': 'addrs', 'type': 'address[]' }, { 'name': 'values', 'type': 'uint256[]' }, { 'name': 'calldataLengths', 'type': 'uint256[]' }, { 'name': 'calldatas', 'type': 'bytes' }], 'name': 'atomicize', 'outputs': [], 'payable': false, 'stateMutability': 'nonpayable', 'type': 'function' }]
+    const atomicizerc = new web3.eth.Contract(abi, atomicizer.address)
+    console.log("atomicizerc: %s", atomicizerc)
+
     let tradingAmount = buyAmount * sellingPrice
     let commissionAmount = commission * tradingAmount
     let royaltyAmount = royalty * (tradingAmount - commissionAmount)
@@ -83,85 +89,116 @@ contract('WyvernExchange', (accounts) => {
     const selectorTwo = web3.eth.abi.encodeFunctionSignature('anyERC20ForERC1155(bytes,address[7],uint8[2],uint256[6],bytes,bytes)')
 
     // 设置订单处理时所需的参数
-    const paramsOne = web3.eth.abi.encodeParameters(
+    const params1 = web3.eth.abi.encodeParameters(
       ['address[2]', 'uint256[3]'],
       [[erc1155.address, erc20.address], [tokenId, buyAmount, sellingPrice]]
     )
-    const paramsTwo = web3.eth.abi.encodeParameters(
+    const params2 = web3.eth.abi.encodeParameters(
       ['address[2]', 'uint256[3]'],
       [[erc20.address, erc1155.address], [tokenId, sellingPrice, buyAmount]]
     )
 
     const one = {
+      // 注册代理合约地址
       registry: registry.address,
+      // 卖家地址
       maker: account_a,
+      // StaticMarket 合约部署地址
       staticTarget: statici.address,
+      // 告知当前订单如何处理 Fill 值
       staticSelector: selectorOne,
-      staticExtradata: paramsOne,
+      // staticSelector 部分参数值
+      staticExtradata: params1,
+      // 填充最大值为当前作品卖的份数
       maximumFill: sellAmount,
+      // 当前作品的起售时间
       listingTime: '0',
+      // 当前作品的停售时间
       expirationTime: '10000000000',
+      // 自增/随机 salt
       salt: '11'
     }
     const two = {
+      // 注册代理合约地址
       registry: registry.address,
+      // 买家地址
       maker: account_b,
+      // StaticMarket 合约部署地址
       staticTarget: statici.address,
+      // 告知当前订单如何处理 Fill 值
       staticSelector: selectorTwo,
-      staticExtradata: paramsTwo,
-      maximumFill: sellingPrice * buyAmount,
+      // staticSelector 部分参数值
+      staticExtradata: params2,
+      // 填充最大值为当前交易的总金额
+      maximumFill: buyAmount * sellingPrice,
+      // 当前订单的开始时间
       listingTime: '0',
+      // 当前订单的结束时间
       expirationTime: '10000000000',
+      // 自增/随机 salt
       salt: '12'
     }
 
-    console.log("order01: %s", one)
-    console.log("order02: %s", two)
-
     // (NFT 转让) A 账户转让 1 * NFT => B 账户
-    const firstData = erc1155c.methods.safeTransferFrom(
+    const data1 = erc1155c.methods.safeTransferFrom(
       account_a,
       account_b,
       tokenId,
       buyAmount,
       "0x"
-    ).encodeABI() + ZERO_BYTES32.substr(2)
-    console.log("erc1155.safeTransferFrom(%s, %s, %d, %d, %s)", account_a, account_b, tokenId, buyAmount, "0x")
+    ).encodeABI()
 
     // (交易金额转账) B 账户转让 1 * 10000 * 0.75 代币 => A 账户
-    const secondData = erc20c.methods.transferFrom(
+    const data2 = erc20c.methods.transferFrom(
       account_b,
       account_a,
-      finalAmount
+      buyAmount * sellingPrice
     ).encodeABI()
-    console.log("erc20.transferFrom(%s, %s, %d)", account_a, account_b, finalAmount)
 
     // (手续费转帐) B 账户转让 1 * 10000 代币 => C 账户
-    const thirdData = erc20c.methods.transferFrom(
+    const data3 = erc20c.methods.transferFrom(
       account_b,
       account_a,
       commissionAmount
     ).encodeABI()
-    console.log("erc20.transferFrom(%s, %s, %d)", account_c, account_b, commissionAmount)
 
     // (版税转账) B 账户转让 1 * 10000 代币 => D 账户
-    const fourthData = erc20c.methods.transferFrom(
+    const data4 = erc20c.methods.transferFrom(
       account_b,
       account_a,
       commissionAmount
     ).encodeABI()
-    console.log("erc20.transferFrom(%s, %s, %d)", account_d, account_b, royaltyAmount)
+
+    console.log("data2: %s", data2)
+    console.log("data3: %s", data3)
+    console.log("data4: %s", data4)
+    console.log("call data: %s", data2 + data3.slice(2) + data4.slice(2))
+    // 将转账逻辑一个批量执行
+    // bytes 转为 16 hex string 为 0x，所以需要 -2，并且 / 2（因为每个字节显示为两位字符）
+    const firstData = atomicizerc.methods.atomicize(
+      [erc1155.address],
+      [0],
+      [(data1.length - 2) / 2],
+      data1
+    ).encodeABI()
+
+    const secondData = atomicizerc.methods.atomicize(
+      [erc20.address, erc20.address, erc20.address],
+      [0, 0, 0],
+      [(data2.length - 2) / 2, (data3.length - 2) / 2, (data4.length - 2) / 2],
+      data2 + data3.slice(2) + data4.slice(2)
+    ).encodeABI()
 
     const firstCall = { target: erc1155.address, howToCall: 0, data: firstData }
-    const secondCall = { target: erc20.address, howToCall: 0, data: secondData }
-    const thirdCall = { target: erc20.address, howToCall: 0, data: thirdData }
-    const fourthCall = { target: erc20.address, howToCall: 0, data: fourthData }
+    const secondCall = { target: atomicizer.address, howToCall: 1, data: secondData }
+
+    console.log("one: ", one)
 
     // 签名确认
     let sigOne = await exchange.sign(one, account_a)
     let sigTwo = await exchange.sign(two, account_b)
 
-    await exchange.atomicMatchWith(
+    await debug(exchange.atomicMatchWith(
       one,
       sigOne,
       firstCall,
@@ -171,12 +208,12 @@ contract('WyvernExchange', (accounts) => {
       ZERO_BYTES32,
       // 默认为卖方地址
       { from: account_a }
-    )
+    ))
 
     // 查账确认
     let [account_a_erc20_balance, account_b_erc1155_balance] = await Promise.all([erc20.balanceOf(account_a), erc1155.balanceOf(account_b, tokenId)])
-    assert.equal(account_a_erc20_balance.toNumber(), sellingPrice * buyAmount * txCount, 'Incorrect ERC20 balance')
-    assert.equal(account_b_erc1155_balance.toNumber(), sellingNumerator || (buyAmount * txCount), 'Incorrect ERC1155 balance')
+    assert.equal(account_a_erc20_balance.toNumber(), sellingPrice * buyAmount, 'Incorrect ERC20 balance')
+    assert.equal(account_b_erc1155_balance.toNumber(), buyAmount, 'Incorrect ERC1155 balance')
   }
 
   it('StaticMarket: matches erc1155 <> erc20 order, 1 fill', async () => {
@@ -192,8 +229,8 @@ contract('WyvernExchange', (accounts) => {
       account_b: accounts[1],   /* 买方账户 */
       account_c: accounts[2],   /* 中间商 */
       account_d: accounts[3],   /* 作者账户 */
-      royalty: 0.4,             /* 版税 */
-      commission: 0.25,         /* 手续费 */
+      royalty: 0.2,             /* 版税 */
+      commission: 0.025,         /* 手续费 */
     })
   })
 })

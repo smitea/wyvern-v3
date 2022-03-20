@@ -23,9 +23,9 @@ contract StaticERC20 {
         (address token, uint256 amount) = abi.decode(extra, (address, uint256));
 
         // Call target = token to give
-        require(addresses[2] == token);
+        require(addresses[2] == token, "Call target = token to give");
         // Call type = call
-        require(howToCall == AuthenticatedProxy.HowToCall.Call);
+        require(howToCall == AuthenticatedProxy.HowToCall.Call,"Call type = call");
         // Assert calldata
         require(
             ArrayUtils.arrayEq(
@@ -36,7 +36,8 @@ contract StaticERC20 {
                     addresses[4],
                     amount
                 )
-            )
+            ),
+            "Assert calldata"
         );
     }
 
@@ -49,16 +50,16 @@ contract StaticERC20 {
         bytes memory counterdata
     ) public pure returns (uint256) {
         // Zero-value
-        require(uints[0] == 0);
+        require(uints[0] == 0,"Assert Zero-value");
 
         // Decode extradata
         (address[2] memory tokenGiveGet, uint256[2] memory amountGiveGet) = abi
             .decode(extra, (address[2], uint256[2]));
 
         // Call target = token to give
-        require(addresses[2] == tokenGiveGet[0]);
+        require(addresses[2] == tokenGiveGet[0],"Call target = token to give");
         // Call type = call
-        require(howToCalls[0] == AuthenticatedProxy.HowToCall.Call);
+        require(howToCalls[0] == AuthenticatedProxy.HowToCall.Call,"Call type = call");
         // Assert calldata
         require(
             ArrayUtils.arrayEq(
@@ -69,12 +70,13 @@ contract StaticERC20 {
                     addresses[4],
                     amountGiveGet[0]
                 )
-            )
+            ),
+            "Assert calldata"
         );
 
-        require(addresses[5] == tokenGiveGet[1]);
+        require(addresses[5] == tokenGiveGet[1],"Assert tokenGiveGet");
         // Countercall type = call
-        require(howToCalls[1] == AuthenticatedProxy.HowToCall.Call);
+        require(howToCalls[1] == AuthenticatedProxy.HowToCall.Call,"Assert Countercall type = call");
         // Assert countercalldata
         require(
             ArrayUtils.arrayEq(
@@ -85,7 +87,8 @@ contract StaticERC20 {
                     addresses[1],
                     amountGiveGet[1]
                 )
-            )
+            ),
+            "Assert countercalldata"
         );
 
         // Mark filled.
@@ -107,7 +110,7 @@ contract StaticERC20 {
         );
 
         // Zero-value
-        require(uints[0] == 0);
+        require(uints[0] == 0,"swapForever Zero-value");
 
         // Decode extradata
         (
