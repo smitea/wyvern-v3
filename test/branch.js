@@ -91,11 +91,11 @@ contract('WyvernExchange', (accounts) => {
     // 设置订单处理时所需的参数
     const params1 = web3.eth.abi.encodeParameters(
       ['address[2]', 'uint256[3]'],
-      [[erc1155.address, erc20.address], [tokenId, buyAmount, sellingPrice]]
+      [[erc1155.address, atomicizer.address], [tokenId, buyAmount, sellingPrice]]
     )
     const params2 = web3.eth.abi.encodeParameters(
       ['address[2]', 'uint256[3]'],
-      [[erc20.address, erc1155.address], [tokenId, sellingPrice, buyAmount]]
+      [[atomicizer.address, erc1155.address], [tokenId, sellingPrice, buyAmount]]
     )
 
     const one = {
@@ -140,7 +140,7 @@ contract('WyvernExchange', (accounts) => {
     }
 
     // (NFT 转让) A 账户转让 1 * NFT => B 账户
-    const data1 = erc1155c.methods.safeTransferFrom(
+    const firstData = erc1155c.methods.safeTransferFrom(
       account_a,
       account_b,
       tokenId,
@@ -152,7 +152,7 @@ contract('WyvernExchange', (accounts) => {
     const data2 = erc20c.methods.transferFrom(
       account_b,
       account_a,
-      buyAmount * sellingPrice
+      finalAmount
     ).encodeABI()
 
     // (手续费转帐) B 账户转让 1 * 10000 代币 => C 账户
@@ -166,22 +166,11 @@ contract('WyvernExchange', (accounts) => {
     const data4 = erc20c.methods.transferFrom(
       account_b,
       account_a,
-      commissionAmount
+      royaltyAmount
     ).encodeABI()
 
-    console.log("data2: %s", data2)
-    console.log("data3: %s", data3)
-    console.log("data4: %s", data4)
-    console.log("call data: %s", data2 + data3.slice(2) + data4.slice(2))
     // 将转账逻辑一个批量执行
-    // bytes 转为 16 hex string 为 0x，所以需要 -2，并且 / 2（因为每个字节显示为两位字符）
-    const firstData = atomicizerc.methods.atomicize(
-      [erc1155.address],
-      [0],
-      [(data1.length - 2) / 2],
-      data1
-    ).encodeABI()
-
+    // bytes 转为 16 hex string 为 0x，所以需要 -2，并且 / 2（因为每个字节显示为两位字符)
     const secondData = atomicizerc.methods.atomicize(
       [erc20.address, erc20.address, erc20.address],
       [0, 0, 0],
@@ -191,8 +180,6 @@ contract('WyvernExchange', (accounts) => {
 
     const firstCall = { target: erc1155.address, howToCall: 0, data: firstData }
     const secondCall = { target: atomicizer.address, howToCall: 1, data: secondData }
-
-    console.log("one: ", one)
 
     // 签名确认
     let sigOne = await exchange.sign(one, account_a)
@@ -230,7 +217,7 @@ contract('WyvernExchange', (accounts) => {
       account_c: accounts[2],   /* 中间商 */
       account_d: accounts[3],   /* 作者账户 */
       royalty: 0.2,             /* 版税 */
-      commission: 0.025,         /* 手续费 */
+      commission: 0.025,        /* 手续费 */
     })
   })
 })
