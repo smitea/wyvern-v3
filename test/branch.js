@@ -54,7 +54,7 @@ contract('WyvernExchange', (accounts) => {
     let proxy2 = await registry.proxies(account_b)
     assert.equal(true, proxy2.length > 0, 'no proxy address for account b')
 
-    let totalMintAmount = buyAmount * sellingPrice + 1
+    let totalMintAmount = buyAmount * sellingPrice
     // 在账户 B 中为代理合约授予指定的转账金额权限 (买方第一次购买 NFT 时需要的操作)
     await erc20.approve(proxy2, totalMintAmount, { from: account_b })
     // 为账户 B 铸造一些的代币 (测试步骤)
@@ -68,7 +68,6 @@ contract('WyvernExchange', (accounts) => {
     // 获取 Atomiczer.atomicize 函数调用地址
     const abi = [{ 'constant': false, 'inputs': [{ 'name': 'addrs', 'type': 'address[]' }, { 'name': 'values', 'type': 'uint256[]' }, { 'name': 'calldataLengths', 'type': 'uint256[]' }, { 'name': 'calldatas', 'type': 'bytes' }], 'name': 'atomicize', 'outputs': [], 'payable': false, 'stateMutability': 'nonpayable', 'type': 'function' }]
     const atomicizerc = new web3.eth.Contract(abi, atomicizer.address)
-    console.log("atomicizerc: %s", atomicizerc)
 
     let tradingAmount = buyAmount * sellingPrice
     let commissionAmount = commission * tradingAmount
@@ -158,18 +157,18 @@ contract('WyvernExchange', (accounts) => {
     // (手续费转帐) B 账户转让 1 * 10000 代币 => C 账户
     const data3 = erc20c.methods.transferFrom(
       account_b,
-      account_a,
+      account_c,
       commissionAmount
     ).encodeABI()
 
     // (版税转账) B 账户转让 1 * 10000 代币 => D 账户
     const data4 = erc20c.methods.transferFrom(
       account_b,
-      account_a,
+      account_d,
       royaltyAmount
     ).encodeABI()
 
-    // 将转账逻辑一个批量执行
+    // 将转账逻辑作为一个批量执行
     // bytes 转为 16 hex string 为 0x，所以需要 -2，并且 / 2（因为每个字节显示为两位字符)
     const secondData = atomicizerc.methods.atomicize(
       [erc20.address, erc20.address, erc20.address],
@@ -185,7 +184,7 @@ contract('WyvernExchange', (accounts) => {
     let sigOne = await exchange.sign(one, account_a)
     let sigTwo = await exchange.sign(two, account_b)
 
-    await debug(exchange.atomicMatchWith(
+    await exchange.atomicMatchWith(
       one,
       sigOne,
       firstCall,
@@ -195,11 +194,28 @@ contract('WyvernExchange', (accounts) => {
       ZERO_BYTES32,
       // 默认为卖方地址
       { from: account_a }
-    ))
+    )
 
     // 查账确认
-    let [account_a_erc20_balance, account_b_erc1155_balance] = await Promise.all([erc20.balanceOf(account_a), erc1155.balanceOf(account_b, tokenId)])
-    assert.equal(account_a_erc20_balance.toNumber(), sellingPrice * buyAmount, 'Incorrect ERC20 balance')
+    let [account_a_erc20_balance,
+      account_b_erc20_balance,
+      account_c_erc20_balance,
+      account_d_erc20_balance,
+      account_b_erc1155_balance
+    ] = await Promise.all([
+      erc20.balanceOf(account_a),
+      erc20.balanceOf(account_b),
+      erc20.balanceOf(account_c),
+      erc20.balanceOf(account_d),
+      erc1155.balanceOf(account_b, tokenId)
+    ])
+
+    console.log("account_a balance: %d", account_a_erc20_balance.toNumber())
+    console.log("account_b balance: %d, erc1155: %s", account_b_erc20_balance.toNumber(), account_b_erc1155_balance.toNumber())
+    console.log("account_c balance: %d", account_c_erc20_balance.toNumber())
+    console.log("account_d balance: %d", account_d_erc20_balance.toNumber())
+
+    assert.equal(account_a_erc20_balance.toNumber(), finalAmount, 'Incorrect ERC20 balance')
     assert.equal(account_b_erc1155_balance.toNumber(), buyAmount, 'Incorrect ERC1155 balance')
   }
 

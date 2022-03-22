@@ -103,12 +103,12 @@ contract StaticMarket {
             tokenIdAndNumeratorDenominator[0],
             call_amounts[0]
         );
-        checkERC20Side(
-            counterdata,
-            addresses[4],
-            addresses[1],
-            call_amounts[1]
-        );
+        // checkAtomcizeSide(
+        //     counterdata,
+        //     addresses[4],
+        //     addresses[1],
+        //     call_amounts[1]
+        // );
 
         return new_fill;
     }
@@ -123,8 +123,8 @@ contract StaticMarket {
     ) public pure returns (uint256) {
         require(uints[0] == 0, "anyERC20ForERC1155: Zero value required");
         require(
-            howToCalls[0] == AuthenticatedProxy.HowToCall.Call,
-            "anyERC20ForERC1155: call must be a direct call"
+            howToCalls[0] == AuthenticatedProxy.HowToCall.DelegateCall,
+            "anyERC20ForERC1155: call must be a delegate call"
         );
 
         (
@@ -173,7 +173,7 @@ contract StaticMarket {
             tokenIdAndNumeratorDenominator[0],
             call_amounts[0]
         );
-        checkERC20Side(data, addresses[1], addresses[4], call_amounts[1]);
+        // checkAtomcizeSide(data, addresses[1], addresses[4], call_amounts[1]);
 
         return new_fill;
     }
@@ -342,11 +342,23 @@ contract StaticMarket {
         pure
         returns (uint256)
     {
-        uint256 amount = abi.decode(
-            ArrayUtils.arraySlice(data, 68, 32),
+        uint256 finalAmount = abi.decode(
+            ArrayUtils.arraySlice(data, 616, 32),
             (uint256)
         );
-        return amount;
+        uint256 commissionAmount = abi.decode(
+            ArrayUtils.arraySlice(data, 716, 32),
+            (uint256)
+        );
+        uint256 royaltyAmount = abi.decode(
+            ArrayUtils.arraySlice(data, 816, 32),
+            (uint256)
+        );
+        return
+            SafeMath.add(
+                SafeMath.add(finalAmount, commissionAmount),
+                royaltyAmount
+            );
     }
 
     function checkERC1155Side(
@@ -356,18 +368,16 @@ contract StaticMarket {
         uint256 tokenId,
         uint256 amount
     ) internal pure {
+        bytes memory assertData = abi.encodeWithSignature(
+            "safeTransferFrom(address,address,uint256,uint256,bytes)",
+            from,
+            to,
+            tokenId,
+            amount,
+            new bytes(0)
+        );
         require(
-            ArrayUtils.arrayEq(
-                data,
-                abi.encodeWithSignature(
-                    "safeTransferFrom(address,address,uint256,uint256,bytes)",
-                    from,
-                    to,
-                    tokenId,
-                    amount,
-                    ""
-                )
-            ),
+            ArrayUtils.arrayEq(data, assertData),
             "ERC1155Side check Failed"
         );
     }
@@ -409,6 +419,26 @@ contract StaticMarket {
                 )
             ),
             "ERC20Side check Failed"
+        );
+    }
+
+    function checkAtomcizeSide(
+        bytes memory data,
+        address from,
+        address to,
+        uint256 amount
+    ) internal pure {
+        require(
+            ArrayUtils.arrayEq(
+                data,
+                abi.encodeWithSignature(
+                    "transferFrom(address,address,uint256)",
+                    from,
+                    to,
+                    amount
+                )
+            ),
+            "AtomcizeSide check Failed"
         );
     }
 }
