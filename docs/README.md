@@ -1,24 +1,30 @@
 # Wyvern Protocol
 
+Project Wyvern is a decentralized digital asset exchange protocol running on Ethereum. Buy and sell everything from virtual kittens to smart contracts with no counterparty risk.
+
+## 架构设计
+
+### 模块设计
+
+Wyvern Protocol 按照数据和业务逻辑分离的原则进行设计， 其中数据部分仅在 `Registry` 合约中实现，而协议验证和流程控制的业务逻辑在 `Exchange` 中实现
+
+![Wyvern Module](images/Wyvern%20Protocol01.png)
+
 ## 交易过程
 
-可以借鉴 Opensea 买卖流程来进行参考
+### 上架
+1. `Register` 创建账户代理
+2. `ApprovalForAll` 为账户代理授予 ERC1155 NFT 转账的权限
 
-### 创建订单
+### 下架
 
-每个新账户第一次发布作品时，需要进行初始化钱包操作
-
-1. Initialize your wallet: : 通过调用 `registerProxy` 在链上创建一个合约，即代理合约，对应的就是 `WyvernRegistry`
-2. 授权允许 `WyvernRegistry` 合约将 NFT 所有者的资产转移: 通过调用 `setApprovalForAll` 来进行
-3. 签名认证，确保当前操作属于本人操作
+### 降价
 
 ### 购买
+1. `sign` 交易双方需要签名确认
+2. `atomicMatchWith` 进行交易
 
-使用协议中 `atomicMatch` 函数实现购买操作:
-
-1. 转账该笔金额的 97.5% 给 NFT 作者(版税交易)
-2. 转账该笔金额的 2.5% 给 OpenSea(平台费用交易)
-3. 通过 `proxy` 合约，调用 NFT 合约的 `transferFrom`, 转移 NFT 所有权
+![Wyvern Module](images/Wyvern%20Protocol02.png)
 
 ## 相关 EIP
 
@@ -48,7 +54,7 @@ The bulk of the logic in an order is in constructing the predicate over the call
 ``` solidity
 /* An order, convenience struct. */
 struct Order {
-    /* Order registry address. (注册地址) */
+    /* Order registry address. */
     address registry;
     /* Order maker address. */
     address maker;
@@ -60,9 +66,9 @@ struct Order {
     bytes staticExtradata;
     /* Order maximum fill factor. */
     uint256 maximumFill;
-    /* Order listing timestamp. (订单允许交易的时间 before) */
+    /* Order listing timestamp. */
     uint256 listingTime;
-    /* Order expiration timestamp - 0 for no expiry. (订单截止的时间 after) */
+    /* Order expiration timestamp - 0 for no expiry. */
     uint256 expirationTime;
     /* Order salt to prevent duplicate hashes. */
     uint256 salt;
