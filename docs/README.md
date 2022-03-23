@@ -2,168 +2,216 @@
 
 Project Wyvern is a decentralized digital asset exchange protocol running on Ethereum. Buy and sell everything from virtual kittens to smart contracts with no counterparty risk.
 
-## 架构设计
+## 协议简介
 
-### 模块设计
+## 快速开始
 
-Wyvern Protocol 按照数据和业务逻辑分离的原则进行设计， 其中数据部分仅在 `Registry` 合约中实现，而协议验证和流程控制的业务逻辑在 `Exchange` 中实现
 
-![Wyvern Module](images/Wyvern%20Protocol01.png)
+### 注册代理合约
 
-## 交易过程
+```javascript
+const {
+  tokenId,      /* NFT TokenID */
+  sellAmount,   /* 售卖份数 */
+  sellingPrice, /* 售卖的单份价格 */
+  buyAmount,    /* 买的份数 */
+  account_a,    /* 卖方账户 */
+  account_b,    /* 买方账户 */
+  account_c,    /* 中间商 */
+  account_d,    /* 作者账户 */
+  royalty,      /* 版税 */
+  commission,   /* 手续费 */
+} = options
+// 部署合约
+let { exchange, registry, statici, atomicizer } = await deploy_core_contracts()
+let [erc20, erc1155] = await deploy([TestERC20, TestERC1155])
+// 注册代理合约，初始化钱包时需要签约代理 (卖方第一次发布作品时需要的操作)
+await registry.registerProxy({ from: account_a })
+let proxy1 = await registry.proxies(account_a)
+assert.equal(true, proxy1.length > 0, 'no proxy address for account a')
+await registry.registerProxy({ from: account_b })
+let proxy2 = await registry.proxies(account_b)
+assert.equal(true, proxy2.length > 0, 'no proxy address for account b')
+let totalMintAmount = buyAmount * sellingPrice
+// 在账户 B 中为代理合约授予指定的转账金额权限 (买方第一次购买 NFT 时需要的操作)
+await erc20.approve(proxy2, totalMintAmount, { from: account_b })
+// 为账户 B 铸造一些的代币 (测试步骤)
+await erc20.mint(account_b, totalMintAmount)
+// 在账户 A 中为代理合约授予允许转走 NFT 的权限 (卖方第一次发布作品时需要的操作)
+await erc1155.setApprovalForAll(proxy1, true, { from: account_a })
+// 为账户 A 铸造指定的 NFT 数量 (测试步骤)
+await erc1155.mint(account_a, tokenId, sellAmount)
+```
 
-### 上架
-1. `Register` 创建账户代理
-2. `ApprovalForAll` 为账户代理授予 ERC1155 NFT 转账的权限
+### NFT与代币兑换交易
 
-### 下架
+### NFT与代币兑换交易(含手续费)
 
-### 降价
+```javascript
+// 获取 Atomiczer.atomicize 函数调用地址
+const abi = [{ 'constant': false, 'inputs': [{ 'name': 'addrs', 'type': 'address[]' }, { 'name': 'values', 'type': 'uint256[]' }, { 'name':'calldataLengths', 'type': 'uint256[]' }, { 'name': 'calldatas', 'type': 'bytes' }], 'name': 'atomicize', 'outputs': [], 'payable': false,'stateMutability': 'nonpayable', 'type': 'function' }]
+const atomicizerc = new web3.eth.Contract(abi, atomicizer.address)
+// 交易的总金额
+let tradingAmount = buyAmount * sellingPrice
+// 手续费
+let commissionAmount = commission * tradingAmount
+// 版税
+let royaltyAmount = royalty * (tradingAmount - commissionAmount)
+// 卖家收到的金额
+let finalAmount = tradingAmount - commissionAmount - royaltyAmount
 
-### 购买
-1. `sign` 交易双方需要签名确认
-2. `atomicMatchWith` 进行交易
+console.log("tradingAmount:     %d", tradingAmount)
+console.log("commissionAmount:  %d", commissionAmount)
+console.log("royaltyAmount:     %d", royaltyAmount)
+console.log("finalAmount:       %d", finalAmount)
 
-![Wyvern Module](images/Wyvern%20Protocol02.png)
+// 获取 ERC1155 实例
+const erc1155c = new web3.eth.Contract(erc1155.abi, erc1155.address)
+// 获取 ERC20 实例
+const erc20c = new web3.eth.Contract(erc20.abi, erc20.address)
 
-## 相关 EIP
-
-- [EIP-20](https://eips.ethereum.org/EIPS/eip-20) 交易合约
-- [EIP-712](https://segmentfault.com/a/1190000015647458) 签名合约
-- [EIP-897](https://eips.ethereum.org/EIPS/eip-897) 代理合约
-- [EIP-1155](https://zhuanlan.zhihu.com/p/389331603) 资产合约
-- [EIP-1271](https://support.opensea.io/hc/zh-tw/articles/4449355421075-%E6%99%BA%E8%83%BD%E5%90%88%E7%B4%84%E5%8D%87%E7%B4%9A-%E7%B0%BD%E5%90%8D%E8%AB%8B%E6%B1%82%E6%98%AF%E4%BB%80%E9%BA%BC%E6%A8%A3%E7%9A%84-) 在 712 合约的基础上修改的合约
-
-## 协议描述
-
-### Asserting registry
-
-The order maker may check that they and their counterparty are using valid registries (though registries are also whitelisted in the Exchange contract).
-
-> 交易双方都需要登记在注册表中，该注册表维护了所有的交易代理合约
-
-- 用户发布作品时，需要创建一个 `ProxyRegistry` 合约
-- 检查 `ProxyRegistry` 的合约地址是否已被注册(无论该地址是否在白名单中),如果没有，则表示该用户还未部署 `ProxyRegistry`
-
-### Asserting calldata
-
-The bulk of the logic in an order is in constructing the predicate over the call and countercall. Each order's static callback (predicate function) receives all parameters of the call, counterparty call, and order metadata (Ether value, timestamp, matching address) and must decide whether to allow the order to match, and if so how much to fill it.
-
-- `atomicMatch_` 中提供了大部分的静态回调地址作为参数，比如(订单数据，代理的注册器合约地址，代理的创建者地址以及其他支付代码块数据)，并且要在回调的代码块中实现如何处理订单和其 fill 值
-
-``` solidity
-/* An order, convenience struct. */
-struct Order {
-    /* Order registry address. */
-    address registry;
-    /* Order maker address. */
-    address maker;
-    /* Order static target. */
-    address staticTarget;
-    /* Order static selector. */
-    bytes4 staticSelector;
-    /* Order static extradata. */
-    bytes staticExtradata;
-    /* Order maximum fill factor. */
-    uint256 maximumFill;
-    /* Order listing timestamp. */
-    uint256 listingTime;
-    /* Order expiration timestamp - 0 for no expiry. */
-    uint256 expirationTime;
-    /* Order salt to prevent duplicate hashes. */
-    uint256 salt;
+// 获取函数签名
+const selectorOne = web3.eth.abi.encodeFunctionSignature('anyERC1155ForERC20(bytes,address[7],uint8[2],uint256[6],bytes,bytes)')
+const selectorTwo = web3.eth.abi.encodeFunctionSignature('anyERC20ForERC1155(bytes,address[7],uint8[2],uint256[6],bytes,bytes)')
+// 设置订单处理时所需的参数
+const params1 = web3.eth.abi.encodeParameters(
+  ['address[2]', 'uint256[3]'],
+  [[erc1155.address, atomicizer.address], [tokenId, buyAmount, sellingPrice]]
+)
+const params2 = web3.eth.abi.encodeParameters(
+  ['address[2]', 'uint256[3]'],
+  [[atomicizer.address, erc1155.address], [tokenId, sellingPrice, buyAmount]]
+)
+const one = {
+  // 注册代理合约地址
+  registry: registry.address,
+  // 卖家地址
+  maker: account_a,
+  // StaticMarket 合约部署地址
+  staticTarget: statici.address,
+  // 告知当前订单如何处理 Fill 值
+  staticSelector: selectorOne,
+  // staticSelector 部分参数值
+  staticExtradata: params1,
+  // 填充最大值为当前作品卖的份数
+  maximumFill: sellAmount,
+  // 当前作品的起售时间
+  listingTime: '0',
+  // 当前作品的停售时间
+  expirationTime: '10000000000',
+  // 自增/随机 salt
+  salt: '11'
 }
+const two = {
+  // 注册代理合约地址
+  registry: registry.address,
+  // 买家地址
+  maker: account_b,
+  // StaticMarket 合约部署地址
+  staticTarget: statici.address,
+  // 告知当前订单如何处理 Fill 值
+  staticSelector: selectorTwo,
+  // staticSelector 部分参数值
+  staticExtradata: params2,
+  // 填充最大值为当前交易的总金额
+  maximumFill: buyAmount * sellingPrice,
+  // 当前订单的开始时间
+  listingTime: '0',
+  // 当前订单的结束时间
+  expirationTime: '10000000000',
+  // 自增/随机 salt
+  salt: '12'
+}
+// (NFT 转让) A 账户转让 1 * NFT => B 账户
+const firstData = erc1155c.methods.safeTransferFrom(
+  account_a,
+  account_b,
+  tokenId,
+  buyAmount,
+  "0x"
+).encodeABI()
+// (交易金额转账) B 账户转让 1 * 10000 * 0.75 代币 => A 账户
+const data2 = erc20c.methods.transferFrom(
+  account_b,
+  account_a,
+  finalAmount
+).encodeABI()
+// (手续费转帐) B 账户转让 1 * 10000 代币 => C 账户
+const data3 = erc20c.methods.transferFrom(
+  account_b,
+  account_c,
+  commissionAmount
+).encodeABI()
+// (版税转账) B 账户转让 1 * 10000 代币 => D 账户
+const data4 = erc20c.methods.transferFrom(
+  account_b,
+  account_d,
+  royaltyAmount
+).encodeABI()
+// 将转账逻辑作为一个批量执行
+// bytes 转为 16 hex string 为 0x，所以需要 -2，并且 / 2（因为每个字节显示为两位字符)
+const secondData = atomicizerc.methods.atomicize(
+  [erc20.address, erc20.address, erc20.address],
+  [0, 0, 0],
+  [(data2.length - 2) / 2, (data3.length - 2) / 2, (data4.length - 2) / 2],
+  data2 + data3.slice(2) + data4.slice(2)
+).encodeABI()
+const firstCall = { target: erc1155.address, howToCall: 0, data: firstData }
+const secondCall = { target: atomicizer.address, howToCall: 1, data: secondData }
+// 签名确认
+let sigOne = await exchange.sign(one, account_a)
+let sigTwo = await exchange.sign(two, account_b)
+
+// 最终交易
+await exchange.atomicMatchWith(
+  one,
+  sigOne,
+  firstCall,
+  two,
+  sigTwo,
+  secondCall,
+  ZERO_BYTES32,
+  // 默认为卖方地址
+  { from: account_a }
+)
+
+// 查账确认
+let [account_a_erc20_balance,
+  account_b_erc20_balance,
+  account_c_erc20_balance,
+  account_d_erc20_balance,
+  account_b_erc1155_balance
+] = await Promise.all([
+  erc20.balanceOf(account_a),
+  erc20.balanceOf(account_b),
+  erc20.balanceOf(account_c),
+  erc20.balanceOf(account_d),
+  erc1155.balanceOf(account_b, tokenId)
+])
+console.log("account_a balance: %d", account_a_erc20_balance.toNumber())
+console.log("account_b balance: %d, erc1155: %s", account_b_erc20_balance.toNumber(), account_b_erc1155_balance.toNumber())
+console.log("account_c balance: %d", account_c_erc20_balance.toNumber())
+console.log("account_d balance: %d", account_d_erc20_balance.toNumber())
+assert.equal(account_a_erc20_balance.toNumber(), finalAmount, 'Incorrect ERC20 balance')
+assert.equal(account_b_erc1155_balance.toNumber(), buyAmount, 'Incorrect ERC1155 balance')
 ```
 
-> 订单元数据中大部分都是用来验证交易规则，其中部分静态回调地址，比如 `target` `selector` `extradata` 属性表示如何处理该订单的 fill 值， listingTime 和 expirationTime 用于保证该订单的有效时间范围外不会发生交易活动。
+## 协议实现
 
-### Call
+### 领域模型
 
-The first call is executed by the maker of the order through their proxy contract. The static callback receives all parameters - the call target, the call type (CALL or DELEGATECALL), and the call data - and must validate that the call is one which the maker is willing to perform (e.g. transferring a particular asset or set of assets).
+#### Proxy
 
-> 第一次调用由通过卖方的代理合约执行。 静态回调参数提供了 `Call` 结构: 调用目标、调用类型、执行的代码块, 并且必须验证该次调用是卖方许可的(比如转移特定资产或者一组资产)
+#### Order
 
-### Countercall
+### 架构设计
 
-The second call is executed by the counterparty and referred to in the source as the "countercall" for convenience. The static callback receives all parameters - the countercall target, the countercall type (CALL or DELEGATECALL), and the countercall data - and must validate that the call is one which the maker is willing to accept in return for their own (e.g. transferring a particular asset or set of assets).
+#### WyvernRegistry
 
-> 第二次调用由买方执行，为方便起见，在代码中将其称为 `countercall`。 静态回调接收所有参数 `countercall target`、`countercall type (CALL or DELEGATECALL)`和 `countercall data`, 并且必须验证 call 是卖方许可的调用（例如 transferring 特定的资产或一组资产）。
+#### WyvernExchange
 
-### Asserting state
+#### WyvernAtomicizer
 
-Static calls are executed after the calls (the whole transaction is reverted if the static call fails), so instead of asserting properties of the calldata, you can assert that particular state has changed - e.g. that an account now owns some asset. In some cases this may be more efficient, but it is trickier to reason through and could lead to unintentional consequences if the state changed for other reasons (for example, if the asset you were trying to buy were gifted to you) - so this is recommended for special cases only, such as placing a bug bounty on a contract if an invariant is violated.
+#### StaticMarket
 
-> 订单的中的 静态回调函数会在最后执行，如果执行失败，则会将整个交易活动事务回滚。
-
-### Metadata
-
-Metadata contains order listing time, order expiration time, counterorder listing time, Ether passed in the call (if any), current order fill value, and the matching address.
-
-> 元数据包含订单上架时间、订单到期时间、以太币（如果有）、当前订单成交量。
-
-### Generalized Partial Fill
-
-Orders sign over a maximum fill, and static calls return a uint, which specifies the updated fill value if the order is matched. The current fill of an order can also be manually set by the maker of the order with a transaction (this also allows for order cancellation). Note that setting the fill of an order to a nonzero value also implicitly authorizes the order, since authorization of partially filled orders is cached to avoid unnecessary signature checks.
-
-> 订单签署最大成交，静态调用返回一个 uint，如果订单匹配，它指定更新的成交值。 订单的当前执行也可以由订单的制造者通过交易手动设置（这也允许订单取消）。 请注意，将订单的成交设置为非零值也会隐式授权订单，因为部分成交订单的授权被缓存以避免不必要的签名检查。
-
-### Authorizing an order
-
-Orders must always be authorized by the maker address, who owns the proxy contract which will perform the call. Authorization can be done in three ways: by signed message, by pre-approval, and by match-time approval.
-
-> 订单必须始终卖方地址授权，卖方地址拥有将执行调用的代理合约。 授权可以通过三种方式完成：签名消息、预先批准和指定时间批准。
-
-#### Signed message
-
-The most common method of authorizing an order is to sign the order hash off-chain. This is costless - any number of orders can be signed, stored, indexed, and perhaps listed on a website or automated orderbook. To avoid the necessity of cancelling no-longer-desired orders, makers can sign orders with expiration times in the near future and re-sign new orders for only as long as they wish to continue soliciting the trade.
-
-> 授权订单的最常见方法是在链下对订单哈希进行签名。 这是零成本的——任何数量的订单都可以被签名、存储、索引，也许还可以在网站或自动订单簿上列出。 为了避免取消不再需要的订单的必要性，制造商可以在不久的将来签署具有到期时间的订单，并且只要他们希望继续征求交易，就可以重新签署新订单。
-
-#### Pre-approval
-
-Alternatively, an order can be authorized by sending a transaction to the WyvernExchange contract. This method may be of particular interest for orders constructed by smart contracts, which cannot themselves sign messages off-chain. On-chain authorization emits an event which can be easily indexed by orderbooks who may wish to include the order in their database.
-
-> 或者，可以通过向 WyvernExchange 合约发送交易来授权订单。 这种方法可能对由智能合约构建的订单特别感兴趣，智能合约本身不能在链下签署消息。 链上授权会发出一个事件，该事件可以很容易地被希望将订单包含在其数据库中的订单簿索引。
-
-#### Match-time approval
-
-Finally, an order can be constructed on the fly (likely to match an existing previously signed or approved order) and authorized at match time simply by sending the match transaction from the order's maker address. If the maker intends to send the transaction matching the order themselves, this method may be convenient, and it can be used to save a bit of gas (since calldata verification is implied by sending the transaction).
-
-> 最后，可以即时构建订单（可能匹配现有的先前签署或批准的订单）并在匹配时通过从订单的制造商地址发送匹配交易来授权。 如果 maker 打算自己发送与订单匹配的交易，这种方法可能会很方便，并且可以节省一点 gas（因为发送交易隐含了 calldata 验证）。
-
-### Matching orders
-
-#### Constructing matching calldata
-
-Matching calldata can be constructed in any fashion off-chain. The protocol does not care how the final calldata is obtained, only that it fulfills the orders' predicate functions. In practice, orderbook maintainers (relayers) will likely store additional metadata along with orders which can be used to construct possible matching calldatas.
-
-> 匹配的调用数据可以以任何方式链下构建。 协议并不关心最终的 calldata 是如何获得的，只关心它完成了订单的谓词功能。 在实践中，订单簿维护者（中继者）可能会存储额外的元数据以及订单，这些订单可用于构建可能的匹配调用数据。
-
-#### Asymmetries
-
-To the extent possible, the protocol is designed to be symmetric, such that orders need not be on any particular "side" and restrict themselves to matching with orders on the other "side".
-
-> 在可能的范围内，该协议被设计为对称的。
-
-#### Call ordering
-
-The first asymmetry is ordering. One call must be executed first, and executing that call might change the result of the second call. The first call passed into atomicMatch is executed first.
-
-> 第一个不对称是排序。 必须首先执行一个调用，执行该调用可能会更改第二个调用的结果。 传递给 atomicMatch 的第一个调用首先执行。
-
-#### Special-cased Ether
-
-The second asymmetry is special-cased Ether. Due to Ethereum design limitations, Ether is a wired-in asset (unlike ERC20 tokens) which can only be sent from an account by a transaction from said account. To facilitate ease-of-use, Wyvern supports special-case Ether to the maximum extent possible: the matcher of an order may elect to pass value along with the match transaction, which is then transferred to the counterparty and passed as a parameter to the predicate function (which can assert e.g. that a particular amount was sent).
-
-> 第二个不对称是特殊情况下的以太币。 由于以太坊的设计限制，以太币是一种有线资产（与 ERC20 代币不同），只能通过来自该账户的交易从一个账户发送。 为了便于使用，Wyvern 尽可能支持特殊情况的 Ether：订单的匹配者可以选择将价值与匹配交易一起传递，然后将其传递给交易对手并作为参数传递给 谓词函数（可以断言例如已发送特定数量）。
-
-#### Self-matching
-
-Orders cannot be self-matched; however, two separate orders from the same maker can be matched with each other.
-
-> 訂單不能自行匹配；但是，來自同一製造商的兩個單獨的訂單可以相互匹配。
-
-```solidity
-/* Prevent self-matching (possibly unnecessary, but safer). (保证这是两笔独立的订单) */
-require(firstHash != secondHash, "Self-matching orders is prohibited");
-```
+### 签名设计
