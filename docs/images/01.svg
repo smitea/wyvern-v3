@@ -1,0 +1,441 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 640 480"
+    version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g transform="scale(1, 1)">
+        
+        <!-- ** Rectangle SHADOW *************** -->
+        
+        <g>
+            <defs>
+                <filter id="fillShadow-9D2E557E-0CDC-44CE-96C1-88431C69B5D9">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" />
+                    <feOffset dx="2.0" dy="2.0" />
+                    <!-- <feFlood flood-color="rgb(0, 0, 0);" flood-opacity="0.33" /> -->
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect x="46.00" y="56.00" width="549.00" height="203.00"
+            fill="rgb(0, 0, 0)"
+            filter="url(#fillShadow-9D2E557E-0CDC-44CE-96C1-88431C69B5D9)"
+            />
+        </g>
+        
+        
+        <!-- ** Rectangle *************** -->
+        
+        <g>
+            <rect x="46.00" y="56.00" width="549.00" height="203.00"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="rgb(255, 255, 255)"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-dasharray="1.00 2.00 "
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="267.92" y="69.50"
+            >
+                <tspan style="font-family:PingFangTC-Semibold; font-size:9px; font-style:normal; font-weight:bold;" fill="rgb(0, 0, 0)">Wyvern Smart Contracts</tspan>
+            </text>
+        </g>
+        
+        
+        <!-- ** Rectangle SHADOW *************** -->
+        
+        <g>
+            <defs>
+                <filter id="fillShadow-78F42F4C-F432-4BE5-9DA9-4602B7F39EAE">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" />
+                    <feOffset dx="2.0" dy="2.0" />
+                    <!-- <feFlood flood-color="rgb(0, 0, 0);" flood-opacity="0.33" /> -->
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect x="46.00" y="281.00" width="318.00" height="133.00"
+            fill="rgb(0, 0, 0)"
+            filter="url(#fillShadow-78F42F4C-F432-4BE5-9DA9-4602B7F39EAE)"
+            />
+        </g>
+        
+        
+        <!-- ** Rectangle *************** -->
+        
+        <g>
+            <rect x="46.00" y="281.00" width="318.00" height="133.00"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="rgb(255, 255, 255)"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-dasharray="1.00 2.00 "
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="174.70" y="294.50"
+            >
+                <tspan style="font-family:PingFangTC-Semibold; font-size:9px; font-style:normal; font-weight:bold;" fill="rgb(0, 0, 0)">Static Targets</tspan>
+            </text>
+        </g>
+        
+        
+        <!-- ** Rectangle SHADOW *************** -->
+        
+        <g>
+            <defs>
+                <filter id="fillShadow-76877ABB-8BF9-484E-926A-8D72F97F73DC">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" />
+                    <feOffset dx="2.0" dy="2.0" />
+                    <!-- <feFlood flood-color="rgb(0, 0, 0);" flood-opacity="0.33" /> -->
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect x="384.00" y="281.00" width="211.00" height="132.00"
+            fill="rgb(0, 0, 0)"
+            filter="url(#fillShadow-76877ABB-8BF9-484E-926A-8D72F97F73DC)"
+            />
+        </g>
+        
+        
+        <!-- ** Rectangle *************** -->
+        
+        <g>
+            <rect x="384.00" y="281.00" width="211.00" height="132.00"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="rgb(255, 255, 255)"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-dasharray="1.00 2.00 "
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="446.48" y="294.50"
+            >
+                <tspan style="font-family:PingFangTC-Semibold; font-size:9px; font-style:normal; font-weight:bold;" fill="rgb(0, 0, 0)">EIP Smart contracts</tspan>
+            </text>
+        </g>
+        
+        
+        <!-- ** Rectangle SHADOW *************** -->
+        
+        <g>
+            <defs>
+                <filter id="fillShadow-56053E76-4E38-4408-A364-F8034AE0BE90">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" />
+                    <feOffset dx="2.0" dy="2.0" />
+                    <!-- <feFlood flood-color="rgb(0, 0, 0);" flood-opacity="0.33" /> -->
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect x="73.00" y="122.00" width="104.00" height="79.00"
+            fill="rgb(0, 0, 0)"
+            filter="url(#fillShadow-56053E76-4E38-4408-A364-F8034AE0BE90)"
+            />
+        </g>
+        
+        
+        <!-- ** Rectangle *************** -->
+        
+        <g>
+            <rect x="73.00" y="122.00" width="104.00" height="79.00"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="rgb(255, 255, 255)"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="103.00" y="165.00"
+            >
+                <tspan style="font-family:Helvetica; font-size:12px; font-style:normal; font-weight:normal;" fill="rgb(0, 0, 0)">Registry</tspan>
+            </text>
+        </g>
+        
+        
+        <!-- ** Rectangle SHADOW *************** -->
+        
+        <g>
+            <defs>
+                <filter id="fillShadow-5D5475B3-4943-42E8-860F-55B4F0D60786">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" />
+                    <feOffset dx="2.0" dy="2.0" />
+                    <!-- <feFlood flood-color="rgb(0, 0, 0);" flood-opacity="0.33" /> -->
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect x="468.00" y="122.00" width="100.00" height="79.00"
+            fill="rgb(0, 0, 0)"
+            filter="url(#fillShadow-5D5475B3-4943-42E8-860F-55B4F0D60786)"
+            />
+        </g>
+        
+        
+        <!-- ** Rectangle *************** -->
+        
+        <g>
+            <rect x="468.00" y="122.00" width="100.00" height="79.00"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="rgb(255, 255, 255)"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="491.31" y="165.00"
+            >
+                <tspan style="font-family:Helvetica; font-size:12px; font-style:normal; font-weight:normal;" fill="rgb(0, 0, 0)">Exchange</tspan>
+            </text>
+        </g>
+        
+        
+        <!-- ** Rectangle SHADOW *************** -->
+        
+        <g>
+            <defs>
+                <filter id="fillShadow-34C0E765-1771-47E5-AB4D-2E1D36790BB7">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" />
+                    <feOffset dx="2.0" dy="2.0" />
+                    <!-- <feFlood flood-color="rgb(0, 0, 0);" flood-opacity="0.33" /> -->
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect x="73.00" y="313.00" width="120.00" height="80.00"
+            fill="rgb(0, 0, 0)"
+            filter="url(#fillShadow-34C0E765-1771-47E5-AB4D-2E1D36790BB7)"
+            />
+        </g>
+        
+        
+        <!-- ** Rectangle *************** -->
+        
+        <g>
+            <rect x="73.00" y="313.00" width="120.00" height="80.00"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="rgb(255, 255, 255)"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="84.71" y="356.50"
+            >
+                <tspan style="font-family:Helvetica; font-size:12px; font-style:normal; font-weight:normal;" fill="rgb(0, 0, 0)">WyvernAtomicizer</tspan>
+            </text>
+        </g>
+        
+        
+        <!-- ** Rectangle SHADOW *************** -->
+        
+        <g>
+            <defs>
+                <filter id="fillShadow-10A30AEA-F706-43FC-8552-3F929F864323">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" />
+                    <feOffset dx="2.0" dy="2.0" />
+                    <!-- <feFlood flood-color="rgb(0, 0, 0);" flood-opacity="0.33" /> -->
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect x="214.00" y="313.00" width="120.00" height="80.00"
+            fill="rgb(0, 0, 0)"
+            filter="url(#fillShadow-10A30AEA-F706-43FC-8552-3F929F864323)"
+            />
+        </g>
+        
+        
+        <!-- ** Rectangle *************** -->
+        
+        <g>
+            <rect x="214.00" y="313.00" width="120.00" height="80.00"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="rgb(255, 255, 255)"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="240.66" y="356.50"
+            >
+                <tspan style="font-family:Helvetica; font-size:12px; font-style:normal; font-weight:normal;" fill="rgb(0, 0, 0)">StaticMarket</tspan>
+            </text>
+        </g>
+        
+        
+        <!-- ** Line *************** -->
+        
+        <g>
+            <defs>
+                <clipPath id="clipPath-1F13066B-1E46-4DE1-A76A-F4FCE65474D4">
+                    <path d="
+                        M-10000,-10000 h100000 v100000 h-100000 v-100000
+                        M221.00 155.50
+                        L432.00 155.50
+                        L432.00 168.50
+                        L221.00 168.50
+                        Z
+                        "
+                    clip-rule="evenodd"/>
+                </clipPath>
+            </defs>
+            
+            <path
+                d="
+                    M195.00 162.00
+                    L458.00 162.00
+                    "
+                clip-path="url(#clipPath-1F13066B-1E46-4DE1-A76A-F4FCE65474D4)"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="none"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-dasharray="8.00 4.00 "
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="226.23" y="164.50"
+            >
+                <tspan style="font-family:AmericanTypewriter-Bold; font-size:9px; font-style:normal; font-weight:bold;" fill="rgb(179, 179, 179)">depned   registry addr for check proxy exist. </tspan>
+            </text>
+        </g>
+        
+        
+        <!-- ** Rectangle SHADOW *************** -->
+        
+        <g>
+            <defs>
+                <filter id="fillShadow-9999778F-D1B2-4270-BCE8-ED4E6C94B8B3">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" />
+                    <feOffset dx="2.0" dy="2.0" />
+                    <!-- <feFlood flood-color="rgb(0, 0, 0);" flood-opacity="0.33" /> -->
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect x="405.00" y="310.00" width="70.00" height="80.00"
+            fill="rgb(0, 0, 0)"
+            filter="url(#fillShadow-9999778F-D1B2-4270-BCE8-ED4E6C94B8B3)"
+            />
+        </g>
+        
+        
+        <!-- ** Rectangle *************** -->
+        
+        <g>
+            <rect x="405.00" y="310.00" width="70.00" height="80.00"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="rgb(255, 255, 255)"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="414.43" y="353.50"
+            >
+                <tspan style="font-family:Helvetica; font-size:12px; font-style:normal; font-weight:normal;" fill="rgb(0, 0, 0)">ERC1155</tspan>
+            </text>
+        </g>
+        
+        
+        <!-- ** Rectangle SHADOW *************** -->
+        
+        <g>
+            <defs>
+                <filter id="fillShadow-7A3F82C7-5181-4D36-9661-FA2B5524FEF3">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" />
+                    <feOffset dx="2.0" dy="2.0" />
+                    <!-- <feFlood flood-color="rgb(0, 0, 0);" flood-opacity="0.33" /> -->
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect x="502.00" y="310.00" width="66.00" height="80.00"
+            fill="rgb(0, 0, 0)"
+            filter="url(#fillShadow-7A3F82C7-5181-4D36-9661-FA2B5524FEF3)"
+            />
+        </g>
+        
+        
+        <!-- ** Rectangle *************** -->
+        
+        <g>
+            <rect x="502.00" y="310.00" width="66.00" height="80.00"
+                transform="
+                    translate(0.5 0.5)
+                    "
+                fill="rgb(255, 255, 255)"
+                stroke-width="1.00"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke="rgb(0, 0, 0)"
+                />
+            
+            
+            <text x="515.66" y="353.50"
+            >
+                <tspan style="font-family:Helvetica; font-size:12px; font-style:normal; font-weight:normal;" fill="rgb(0, 0, 0)">ERC20</tspan>
+            </text>
+        </g>
+        
+    </g>
+</svg>
+
