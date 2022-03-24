@@ -9,6 +9,8 @@ const chainIds = {
   coverage: 50,
   rinkeby: 4,
   mumbai: 80001,
+  // https://github.com/wyvernprotocol/wyvern-v3/issues/44
+  "rinkeby-fork": 4,
   main: 1
 }
 

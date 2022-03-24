@@ -1,11 +1,22 @@
 # Wyvern Protocol
 
-Project Wyvern is a decentralized digital asset exchange protocol running on Ethereum. Buy and sell everything from virtual kittens to smart contracts with no counterparty risk.
+Wyvern 是一种数字资产交易协议，主要为了数字资产提供了一对一的交换能力。比如，我们可以用于 进行 NFT 和任何代币进行交易，或者用于代币与代币之间的兑换交易。Wyvern 有以下三点特性：
 
-## 协议简介
+- 支持交易任何不可更改的资产，无论是 ERC20/ERC1155/ERC721；
+- 支持所有的 EVM 平台部署，并为开发者提供 EVM 平台上资产交换的能力；
+- 大大节省用户进行交易时产生的 Gas 费用；
+- 开源；
 
-## 快速开始
+## 协议描述
 
+### 注册代理
+
+Wyvern 协议中提供了 Proxy 的实现，它主要用作账户代理，比如账户 A 中需要卖出一个 NFT 资产，那么在 Wyvern 协议中，需要先注册一个代理（首次交易需要），并且为它授予转移（无论 ERC20/ERC721/ERC1155，都提供了这种授权的能力） NFT 的权利，之后的交易只需要有代理来与买方进行交易即可。这种方式可以为卖家省去每次进行交易的 Gas 费用，卖家只需要支付一次代理注册时产生的 Gas 费用。
+
+
+### 
+
+![](./images/Wyvern%20Protocol01.png)
 
 ### 注册代理合约
 
@@ -196,22 +207,47 @@ assert.equal(account_a_erc20_balance.toNumber(), finalAmount, 'Incorrect ERC20 b
 assert.equal(account_b_erc1155_balance.toNumber(), buyAmount, 'Incorrect ERC1155 balance')
 ```
 
-## 协议实现
+## Development
 
-### 领域模型
+Wyvern 采用 truffle 工具来，并提供相关的自动化脚本对合约进行构建部署测试。
 
-#### Proxy
+### Test
 
-#### Order
+```bash
+yarn testrpc
+```
 
-### 架构设计
+启动 ganache 测试链：
 
-#### WyvernRegistry
+- networkId：50
+- port：8545
 
-#### WyvernExchange
+```bash
+yarn test
+```
 
-#### WyvernAtomicizer
+运行单元测试，单元测试文件在 [test](../test/) 文件夹中。
 
-#### StaticMarket
+### Linting
 
-### 签名设计
+```bash
+yarn lint
+```
+
+运行代码规范检查，可自动识别代码对齐、代码命名等规则，其规则配置文件为 [.soliumrc.json](../.soliumrc.json)，如果有不需要检查的文件则可以在 [.soliumignore](../.soliumignore) 文件中添加即可。
+
+### Static analyze
+
+```bash
+yarn analyze
+```
+
+运行静态分析，Wyvern 使用 [Slither](https://github.com/crytic/slither) 作为静态分析工具，可以分析出大部分 Solidity 代码的[安全问题](https://github.com/crytic/slither#detectors)。
+
+### Deploy
+
+```
+yarn run truffle deploy --network [network]
+```
+
+执行 [编译部署](https://learnblockchain.cn/docs/truffle/getting-started/running-migrations.html)，对应的部署网络可在 [truffle.js] 中配置，如果要发布在公链上，需要在 [sample.env](../sample.env) 文件中进行私钥的配置。

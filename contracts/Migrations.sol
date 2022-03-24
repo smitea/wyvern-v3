@@ -2,7 +2,7 @@
 
   << Migrations >>
 
-  Standard migrations contract for Truffle deployment tracking.
+  Standard migrations contract for Truffle deployment tracking. ()
 
 */
 
