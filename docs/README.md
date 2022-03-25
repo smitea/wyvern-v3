@@ -1,11 +1,11 @@
 # Wyvern Protocol
 
-Wyvern 是一种数字资产交易协议，主要为了数字资产提供了一对一的交换能力。比如，我们可以用于 进行 NFT 和任何代币进行交易，或者用于代币与代币之间的兑换交易。Wyvern 有以下三点特性：
+<!-- Wyvern 是一种数字资产交易协议，主要为了数字资产提供了一对一的交换能力。比如，我们可以用于 进行 NFT 和任何代币进行交易，或者用于代币与代币之间的兑换交易。Wyvern 有以下三点特性：
 
 - 支持交易任何不可更改的资产，无论是 ERC20/ERC1155/ERC721；
 - 支持所有的 EVM 平台部署，并为开发者提供 EVM 平台上资产交换的能力；
 - 大大节省用户进行交易时产生的 Gas 费用；
-- 开源；
+- 开源； -->
 
 ## 协议描述
 
@@ -82,26 +82,20 @@ yarn test
 
 运行单元测试，单元测试文件在 [test](../test/) 文件夹中。
 
-### Linting
+![](images/01.svg)
 
-```bash
-yarn lint
-```
+Wyvern 协议由四个模块组成：
 
-运行代码规范检查，可自动识别代码对齐、代码命名等规则，其规则配置文件为 [.soliumrc.json](../.soliumrc.json)，如果有不需要检查的文件则可以在 [.soliumignore](../.soliumignore) 文件中添加即可。
+- `Registry`: 代理注册器， 用于保存已被注册的代理对象；
+- `Exchange`: 数字资产交换器，用于执行交易请求，变更订单状态等业务逻辑；
+- `Static Targets`: 提供一些工具和静态函数，用于变更交易后的订单状态和交易最终一致性验证；
+- `EIP Smart contracts`: 该模块不是必须的，它主要是与注册代理时的代理协议有关，比如代理 ERC20 的钱包地址时则需要给出 ERC20 合约的地址；
 
-### Static analyze
+### Registry
 
-```bash
-yarn analyze
-```
+Wyvern 协议中给出一个规则：
 
-运行静态分析，Wyvern 使用 [Slither](https://github.com/crytic/slither) 作为静态分析工具，可以分析出大部分 Solidity 代码的[安全问题](https://github.com/crytic/slither#detectors)。
+使用 Wyvern 协议的交易双方需要将对应的交易权限交由 Wyvern，再由 Wyvern 去执行对应的交易操作（比如代币转账）。
 
-### Deploy
 
-```
-yarn run truffle deploy --network [network]
-```
 
-执行 [编译部署](https://learnblockchain.cn/docs/truffle/getting-started/running-migrations.html)，对应的部署网络可在 [truffle.js] 中配置，如果要发布在公链上，需要在 [sample.env](../sample.env) 文件中进行私钥的配置。
