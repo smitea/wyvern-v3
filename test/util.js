@@ -1,46 +1,43 @@
 const Web3 = require('web3')
 const provider = new Web3.providers.HttpProvider('http://localhost:8545')
 var web3 = new Web3(provider)
+const { debug } = require('console')
 const { eip712Domain, structHash, signHash } = require('./eip712.js')
 
 
 // Truffle does not expose chai so it is impossible to add chai-as-promised.
 // This is a simple replacement function.
 // https://github.com/trufflesuite/truffle/issues/2090
-const assertIsRejected = (promise,error_match,message) =>
-  {
-    let passed = false
-    return promise
-      .then(() =>
-        {
-        passed = true
-        return assert.fail()
-        })
-      .catch(error =>
-        {
-        if (passed)
-          return assert.fail(message || 'Expected promise to be rejected')
-        if (error_match)
-          {
-          if (typeof error_match === 'string')
-            return assert.equal(error_match,error.message,message);
-          if (error_match instanceof RegExp)
-            return error.message.match(error_match) || assert.fail(error.message,error_match.toString(),`'${error.message}' does not match ${error_match.toString()}: ${message}`);
-          return assert.instanceOf(error,error_match,message);
-          }
-        })
-  }
+const assertIsRejected = (promise, error_match, message) => {
+  let passed = false
+  return promise
+    .then(() => {
+      passed = true
+      return assert.fail()
+    })
+    .catch(error => {
+      if (passed)
+        return assert.fail(message || 'Expected promise to be rejected')
+      if (error_match) {
+        if (typeof error_match === 'string')
+          return assert.equal(error_match, error.message, message);
+        if (error_match instanceof RegExp)
+          return error.message.match(error_match) || assert.fail(error.message, error_match.toString(), `'${error.message}' does not match ${error_match.toString()}: ${message}`);
+        return assert.instanceOf(error, error_match, message);
+      }
+    })
+}
 
 const increaseTime = seconds => {
   return new Promise(resolve =>
     web3.currentProvider.send({
-    jsonrpc: '2.0',
-    method: 'evm_increaseTime',
-    params: [seconds],
-    id: 0
+      jsonrpc: '2.0',
+      method: 'evm_increaseTime',
+      params: [seconds],
+      id: 0
     }, resolve)
-    )
-  }
+  )
+}
 
 const eip712Order = {
   name: 'Order',
@@ -93,7 +90,7 @@ const parseSig = (bytes) => {
   const r = '0x' + bytes.slice(0, 64)
   const s = '0x' + bytes.slice(64, 128)
   const v = parseInt('0x' + bytes.slice(128, 130), 16)
-  return {v, r, s}
+  return { v, r, s }
 }
 
 const wrap = (inst) => {
@@ -112,7 +109,7 @@ const wrap = (inst) => {
     setOrderFill: (order, fill) => inst.setOrderFill_(hashOrder(order), fill),
     atomicMatch: (order, sig, call, counterorder, countersig, countercall, metadata) => inst.atomicMatch_(
       [order.registry, order.maker, order.staticTarget, order.maximumFill, order.listingTime, order.expirationTime, order.salt, call.target,
-        counterorder.registry, counterorder.maker, counterorder.staticTarget, counterorder.maximumFill, counterorder.listingTime, counterorder.expirationTime, counterorder.salt, countercall.target],
+      counterorder.registry, counterorder.maker, counterorder.staticTarget, counterorder.maximumFill, counterorder.listingTime, counterorder.expirationTime, counterorder.salt, countercall.target],
       [order.staticSelector, counterorder.staticSelector],
       order.staticExtradata, call.data, counterorder.staticExtradata, countercall.data,
       [call.howToCall, countercall.howToCall],
@@ -124,32 +121,32 @@ const wrap = (inst) => {
     ),
     atomicMatchWith: (order, sig, call, counterorder, countersig, countercall, metadata, misc) => inst.atomicMatch_(
       [
-        order.registry, 
-        order.maker, 
-        order.staticTarget, 
-        order.maximumFill, 
-        order.listingTime, 
-        order.expirationTime, 
-        order.salt, 
+        order.registry,
+        order.maker,
+        order.staticTarget,
+        order.maximumFill,
+        order.listingTime,
+        order.expirationTime,
+        order.salt,
         call.target,
-        counterorder.registry, 
-        counterorder.maker, 
-        counterorder.staticTarget, 
-        counterorder.maximumFill, 
-        counterorder.listingTime, 
-        counterorder.expirationTime, 
-        counterorder.salt, 
+        counterorder.registry,
+        counterorder.maker,
+        counterorder.staticTarget,
+        counterorder.maximumFill,
+        counterorder.listingTime,
+        counterorder.expirationTime,
+        counterorder.salt,
         countercall.target],
       [
-        order.staticSelector, 
+        order.staticSelector,
         counterorder.staticSelector
       ],
-      order.staticExtradata, 
-      call.data, 
-      counterorder.staticExtradata, 
+      order.staticExtradata,
+      call.data,
+      counterorder.staticExtradata,
       countercall.data,
       [
-        call.howToCall, 
+        call.howToCall,
         countercall.howToCall
       ],
       metadata,
@@ -162,7 +159,7 @@ const wrap = (inst) => {
   }
   obj.sign = (order, account) => {
     const str = structToSign(order, inst.address)
-    return web3.signTypedData(account, {
+    const obj = {
       types: {
         EIP712Domain: eip712Domain.fields,
         Order: eip712Order.fields
@@ -170,7 +167,9 @@ const wrap = (inst) => {
       domain: str.domain,
       primaryType: 'Order',
       message: order
-    }).then(sigBytes => {
+    }
+    debug(obj)
+    return web3.signTypedData(account, obj).then(sigBytes => {
       const sig = parseSig(sigBytes)
       return sig
     })
@@ -193,12 +192,13 @@ const randomUint = () => {
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
-const NULL_SIG = {v: 27, r: ZERO_BYTES32, s: ZERO_BYTES32}
+const NULL_SIG = { v: 27, r: ZERO_BYTES32, s: ZERO_BYTES32 }
 const CHAIN_ID = 50
 
 module.exports = {
   hashOrder,
   hashToSign,
+  structToSign,
   increaseTime,
   assertIsRejected,
   wrap,
